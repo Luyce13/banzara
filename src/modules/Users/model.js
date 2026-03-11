@@ -32,6 +32,20 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    avatar: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "File",
+    },
+    address: {
+      type: {
+        type: String,
+        enum: ["Point"],
+      },
+      coordinates: {
+        type: [Number],
+      },
+      label: String, // Human readable address
+    },
   },
   {
     timestamps: true,

@@ -1,1 +1,61 @@
-module.exports = {};
+const Category = require("./model");
+const ApiError = require("../../utils/ApiError");
+const httpStatusObj = require("http-status");
+const httpStatus = httpStatusObj.status || httpStatusObj;
+
+const createCategory = async (categoryBody) => {
+  if (!categoryBody.slug) {
+    categoryBody.slug = categoryBody.name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  }
+  return Category.create(categoryBody);
+};
+
+const getCategoryBySlug = async (slug) => {
+  const category = await Category.findOne({ slug });
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
+  }
+  return category;
+};
+
+const getCategoryTree = async () => {
+  const categories = await Category.find().lean();
+  
+  const buildTree = (parentId = null) => {
+    return categories
+      .filter((cat) => String(cat.parent) === String(parentId) || (parentId === null && !cat.parent))
+      .map((cat) => ({
+        ...cat,
+        children: buildTree(cat._id),
+      }));
+  };
+
+  return buildTree();
+};
+
+const updateCategoryById = async (id, updateBody) => {
+  const category = await Category.findById(id);
+  if (!category) {
+     throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
+  }
+  Object.assign(category, updateBody);
+  await category.save();
+  return category;
+};
+
+const deleteCategoryById = async (id) => {
+  const category = await Category.findById(id);
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
+  }
+  await category.deleteOne();
+  return category;
+};
+
+module.exports = {
+  createCategory,
+  getCategoryBySlug,
+  getCategoryTree,
+  updateCategoryById,
+  deleteCategoryById,
+};

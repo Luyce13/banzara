@@ -195,6 +195,162 @@
       ]
     },
     {
+      "name": "Files",
+      "item": [
+        {
+          "name": "Get File by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/files/:id",
+              "host": ["{{banzara}}"],
+              "path": ["files", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "FILE_ID_HERE"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/users/me",
+              "host": ["{{banzara}}"],
+              "path": ["users", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Name",
+                  "type": "text"
+                },
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "address",
+                  "value": "{\n    \"type\": \"Point\",\n    \"coordinates\": [73.0479, 33.6844],\n    \"label\": \"Islamabad, Pakistan\"\n}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{banzara}}/users/me",
+              "host": ["{{banzara}}"],
+              "path": ["users", "me"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get Category Tree",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/categories",
+              "host": ["{{banzara}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/categories/slug/real-estate",
+              "host": ["{{banzara}}"],
+              "path": ["categories", "slug", "real-estate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Real Estate\",\n    \"parent\": null\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/categories",
+              "host": ["{{banzara}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Properties\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/categories/:id",
+              "host": ["{{banzara}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "CATEGORY_ID_HERE"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Common",
       "item": [
         {

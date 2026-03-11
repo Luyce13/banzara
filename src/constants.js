@@ -13,6 +13,11 @@ const ENV = {
   SMTP_USERNAME: process.env.SMTP_USERNAME,
   SMTP_PASSWORD: process.env.SMTP_PASSWORD,
   EMAIL_FROM: process.env.EMAIL_FROM || "support@banzara.com",
+  S3_BUCKET: process.env.S3_BUCKET,
+  S3_REGION: process.env.S3_REGION || "us-east-1",
+  S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+  S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+  S3_ENDPOINT: process.env.S3_ENDPOINT, // Optional for S3-compatible storage
 };
 
 const LOG_CONFIG = {
