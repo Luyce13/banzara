@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // enable cors
-app.use(cors());
+app.use(cors("*"));
 
 // sanitize request data (in-place NoSQL & XSS)
 app.use(sanitizer);
