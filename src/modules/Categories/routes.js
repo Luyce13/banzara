@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.get("/", categoriesController.getCategoryTree);
 router.get("/slug/:slug", categoriesController.getCategory);
+router.get("/:id/filters", categoriesController.getCategoryFilters);
 
 // Management (Protected)
 router.post("/", authMiddleware, validate(categoryValidation.createCategory), categoriesController.createCategory);

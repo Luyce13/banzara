@@ -18,7 +18,9 @@ const s3 = new S3Client({
     accessKeyId: ENV.S3_ACCESS_KEY,
     secretAccessKey: ENV.S3_SECRET_KEY,
   },
-  ...(ENV.S3_ENDPOINT ? { endpoint: ENV.S3_ENDPOINT } : {}),
+  ...(ENV.S3_ENDPOINT
+    ? { endpoint: ENV.S3_ENDPOINT, forcePathStyle: true }
+    : {}),
 });
 
 const calculateHash = (buffer) => {
@@ -28,7 +30,7 @@ const calculateHash = (buffer) => {
 const uploadToS3 = async (file, folder = "general") => {
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   const key = `banzarna/${folder}/${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`;
-
+  console.log(ENV.S3_BUCKET);
   const command = new PutObjectCommand({
     Bucket: ENV.S3_BUCKET,
     Key: key,

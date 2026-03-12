@@ -351,6 +351,153 @@
       ]
     },
     {
+      "name": "Listings",
+      "item": [
+        {
+          "name": "Browse Listings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/listings?page=1&limit=10",
+              "host": ["{{banzara}}"],
+              "path": ["listings"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Listings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/listings/search?q=honda",
+              "host": ["{{banzara}}"],
+              "path": ["listings", "search"],
+              "query": [
+                { "key": "q", "value": "honda" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Nearby Listings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/listings/nearby?lng=73.0479&lat=33.6844&radius=10",
+              "host": ["{{banzara}}"],
+              "path": ["listings", "nearby"],
+              "query": [
+                { "key": "lng", "value": "73.0479" },
+                { "key": "lat", "value": "33.6844" },
+                { "key": "radius", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Listing by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/listings/slug/honda-cb150r-abc123",
+              "host": ["{{banzara}}"],
+              "path": ["listings", "slug", "honda-cb150r-abc123"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Listings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/listings/me",
+              "host": ["{{banzara}}"],
+              "path": ["listings", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Listing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Honda CB150R 2024", "type": "text" },
+                { "key": "description", "value": "Like new condition", "type": "text" },
+                { "key": "category", "value": "CATEGORY_ID_HERE", "type": "text" },
+                { "key": "type", "value": "product", "type": "text" },
+                { "key": "price", "value": "350000", "type": "text" },
+                { "key": "condition", "value": "used", "type": "text" },
+                { "key": "images", "type": "file", "src": [] }
+              ]
+            },
+            "url": {
+              "raw": "{{banzara}}/listings",
+              "host": ["{{banzara}}"],
+              "path": ["listings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Listing",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Updated Title", "type": "text" },
+                { "key": "price", "value": "300000", "type": "text" },
+                { "key": "images", "type": "file", "src": [] }
+              ]
+            },
+            "url": {
+              "raw": "{{banzara}}/listings/:id",
+              "host": ["{{banzara}}"],
+              "path": ["listings", ":id"],
+              "variable": [
+                { "key": "id", "value": "LISTING_ID_HERE" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Listing",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/listings/:id",
+              "host": ["{{banzara}}"],
+              "path": ["listings", ":id"],
+              "variable": [
+                { "key": "id", "value": "LISTING_ID_HERE" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Common",
       "item": [
         {

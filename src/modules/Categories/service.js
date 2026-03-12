@@ -52,10 +52,19 @@ const deleteCategoryById = async (id) => {
   return category;
 };
 
+const getCategoryFilters = async (id) => {
+  const category = await Category.findById(id).lean();
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
+  }
+  return (category.attributeSchema || []).filter((attr) => attr.filterable);
+};
+
 module.exports = {
   createCategory,
   getCategoryBySlug,
   getCategoryTree,
+  getCategoryFilters,
   updateCategoryById,
   deleteCategoryById,
 };

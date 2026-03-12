@@ -1,7 +1,7 @@
 const queryParser = (req, res, next) => {
   // 1. Filtering
   const queryObj = { ...req.query };
-  const excludedFields = ["page", "sort", "limit", "fields"];
+  const excludedFields = ["page", "sort", "limit", "fields", "q"];
   excludedFields.forEach((el) => delete queryObj[el]);
 
   // Advanced filtering (e.g. price[gte]=500)

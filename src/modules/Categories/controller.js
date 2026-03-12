@@ -30,6 +30,11 @@ const deleteCategory = catchAsync(async (req, res) => {
   return ApiResponse(res, httpStatus.OK, "Category deleted");
 });
 
+const getCategoryFilters = catchAsync(async (req, res) => {
+  const filters = await categoryService.getCategoryFilters(req.params.id);
+  return ApiResponse(res, httpStatus.OK, "Category filters retrieved", filters);
+});
+
 const ping = catchAsync(async (req, res) => {
   return ApiResponse(res, httpStatus.OK, 'Categories module ping successful');
 });
@@ -40,5 +45,6 @@ module.exports = {
   getCategory,
   updateCategory,
   deleteCategory,
+  getCategoryFilters,
   ping,
 };
