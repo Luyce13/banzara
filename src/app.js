@@ -9,7 +9,8 @@ const ApiError = require("./utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
 const logger = require("./utils/logger").child({ context: "App" });
-const { API_CONFIG } = require("./constants");
+// enable cors
+const { API_CONFIG, ENV } = require("./constants");
 const cookieParser = require("cookie-parser");
 
 const app = express();
@@ -35,7 +36,25 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // enable cors
-app.use(cors("*"));
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow any localhost origin in development
+    const isLocalhost =
+      origin &&
+      (origin.startsWith("http://localhost") ||
+        origin.startsWith("http://127.0.0.1"));
+    if (!origin || ENV.NODE_ENV === "development" || isLocalhost) {
+      callback(null, true);
+    } else {
+      // For production, you can add a whitelist here
+      callback(null, false);
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+};
+app.use(cors(corsOptions));
 
 // sanitize request data (in-place NoSQL & XSS)
 app.use(sanitizer);
