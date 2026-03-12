@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: require("path").join(__dirname, "../.env") });
 const { ENV } = require("./constants");
 const mongoose = require("mongoose");
 const app = require("./app");
@@ -8,7 +8,10 @@ let server;
 const PORT = ENV.PORT;
 const DB_URI = ENV.MONGODB_URI;
 
-server = app.listen(PORT, () => {
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+server = app.listen(PORT, "[IP_ADDRESS]", () => {
   logger.info(`Listening to port http://localhost:${PORT}`);
 });
 
