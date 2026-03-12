@@ -8,9 +8,6 @@ let server;
 const PORT = ENV.PORT;
 const DB_URI = ENV.MONGODB_URI;
 
-const dns = require("dns");
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
-
 server = app.listen(PORT, "0.0.0.0", () => {
   logger.info(`Listening to port http://localhost:${PORT}`);
 });
