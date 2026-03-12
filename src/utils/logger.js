@@ -7,7 +7,7 @@ const fs = require("fs");
 const { Writable } = require("stream");
 const { ENV, LOG_CONFIG } = require("../constants");
 const logDir = path.join(process.cwd(), LOG_CONFIG.DIR);
-if (!fs.existsSync(logDir)) fs.mkdirSync(logDir);
+if (LOG_CONFIG.ENABLE_FILE_LOGGING && !fs.existsSync(logDir)) fs.mkdirSync(logDir);
 
 const rfsOptions = {
   interval: LOG_CONFIG.ROTATION_INTERVAL, // Daily rotation
@@ -15,10 +15,14 @@ const rfsOptions = {
   path: logDir,
 };
 
-const detailedStream = rfs.createStream("detailed.log", rfsOptions);
-const detailedErrorStream = rfs.createStream("detailed-error.log", rfsOptions);
-const conciseStream = rfs.createStream("concise.log", rfsOptions);
-const conciseErrorStream = rfs.createStream("concise-error.log", rfsOptions);
+let detailedStream, detailedErrorStream, conciseStream, conciseErrorStream;
+
+if (LOG_CONFIG.ENABLE_FILE_LOGGING) {
+  detailedStream = rfs.createStream("detailed.log", rfsOptions);
+  detailedErrorStream = rfs.createStream("detailed-error.log", rfsOptions);
+  conciseStream = rfs.createStream("concise.log", rfsOptions);
+  conciseErrorStream = rfs.createStream("concise-error.log", rfsOptions);
+}
 
 const formatTime = (date) => format(date, "dd/MM/yyyy, hh:mm:ss a");
 const formatTimeSimple = (date) => format(date, "hh:mm:ss a");
@@ -123,13 +127,16 @@ const createStreamWriter = (type) => {
   });
 };
 
-const streams = [
-  { stream: createStreamWriter("console") },
-  { stream: createStreamWriter("concise") },
-  { stream: createStreamWriter("concise-error"), level: "error" },
-  { stream: createStreamWriter("detailed") },
-  { stream: createStreamWriter("detailed-error"), level: "error" },
-];
+const streams = [{ stream: createStreamWriter("console") }];
+
+if (LOG_CONFIG.ENABLE_FILE_LOGGING) {
+  streams.push(
+    { stream: createStreamWriter("concise") },
+    { stream: createStreamWriter("concise-error"), level: "error" },
+    { stream: createStreamWriter("detailed") },
+    { stream: createStreamWriter("detailed-error"), level: "error" },
+  );
+}
 
 const logger = pino(
   {

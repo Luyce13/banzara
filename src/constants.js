@@ -26,6 +26,7 @@ const LOG_CONFIG = {
   ROTATION_INTERVAL: "1d",
   VIEW: "simple",
   LEVEL: "info",
+  ENABLE_FILE_LOGGING: process.env.LOG_ENABLE_FILES !== "false",
 };
 
 const API_CONFIG = {
