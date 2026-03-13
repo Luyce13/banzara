@@ -4,7 +4,6 @@ const ALLOWED_ORIGINS = {
 };
 
 const logger = require("../utils/logger").child({ context: "CORS" });
-const AppError = require("../utils/AppError");
 
 const isOriginAllowed = (origin) => {
   if (!origin) return true;
@@ -27,7 +26,7 @@ const corsConfig = {
       callback(null, true);
     } else {
       logger.fatal(`CORS blocked origin: ${origin}`);
-      callback(new AppError(`${origin} is not allowed by CORS`, 403));
+      callback(new Error(`${origin} is not allowed by CORS`));
     }
   },
 };
