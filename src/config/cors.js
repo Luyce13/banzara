@@ -31,6 +31,4 @@ const corsConfig = {
   },
 };
 
-module.exports = {
-  corsConfig,
-};
+module.exports = corsConfig;
