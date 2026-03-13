@@ -47,7 +47,7 @@ const updateUserById = async (userId, updateBody) => {
 
   Object.assign(user, updateBody);
   await user.save();
-  return user.populate("avatar");
+  return user.populate("avatar").lean();
 };
 
 module.exports = {

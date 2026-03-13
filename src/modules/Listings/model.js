@@ -55,6 +55,14 @@ const listingSchema = new mongoose.Schema(
       default: "active",
       index: true,
     },
+    avgRating: {
+      type: Number,
+      default: 0,
+    },
+    reviewCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

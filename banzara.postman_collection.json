@@ -351,6 +351,215 @@
       ]
     },
     {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"listing\": \"LISTING_ID_HERE\",\n    \"note\": \"I want to book this service\",\n    \"scheduledAt\": \"2024-12-25T10:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/bookings",
+              "host": ["{{banzara}}"],
+              "path": ["bookings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My Bookings (Buyer)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/bookings/me?role=buyer",
+              "host": ["{{banzara}}"],
+              "path": ["bookings", "me"],
+              "query": [{ "key": "role", "value": "buyer" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/bookings/:id",
+              "host": ["{{banzara}}"],
+              "path": ["bookings", ":id"],
+              "variable": [{ "key": "id", "value": "BOOKING_ID_HERE" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Booking Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/bookings/:id/status",
+              "host": ["{{banzara}}"],
+              "path": ["bookings", ":id", "status"],
+              "variable": [{ "key": "id", "value": "BOOKING_ID_HERE" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"booking\": \"BOOKING_ID_HERE\",\n    \"rating\": 5,\n    \"comment\": \"Excellent service!\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/reviews",
+              "host": ["{{banzara}}"],
+              "path": ["reviews"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/reviews/user/:userId",
+              "host": ["{{banzara}}"],
+              "path": ["reviews", "user", ":userId"],
+              "variable": [{ "key": "userId", "value": "USER_ID_HERE" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Listing Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/reviews/listing/:listingId",
+              "host": ["{{banzara}}"],
+              "path": ["reviews", "listing", ":listingId"],
+              "variable": [{ "key": "listingId", "value": "LISTING_ID_HERE" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Get My Conversations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/chat/conversations",
+              "host": ["{{banzara}}"],
+              "path": ["chat", "conversations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Start Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"listing\": \"LISTING_ID_HERE\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/chat/conversations",
+              "host": ["{{banzara}}"],
+              "path": ["chat", "conversations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Messages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/chat/conversations/:id/messages",
+              "host": ["{{banzara}}"],
+              "path": ["chat", "conversations", ":id", "messages"],
+              "variable": [{ "key": "id", "value": "CONVERSATION_ID_HERE" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"text\": \"Hi, is this still available?\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/chat/conversations/:id/messages",
+              "host": ["{{banzara}}"],
+              "path": ["chat", "conversations", ":id", "messages"],
+              "variable": [{ "key": "id", "value": "CONVERSATION_ID_HERE" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/chat/conversations/:id/read",
+              "host": ["{{banzara}}"],
+              "path": ["chat", "conversations", ":id", "read"],
+              "variable": [{ "key": "id", "value": "CONVERSATION_ID_HERE" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Listings",
       "item": [
         {

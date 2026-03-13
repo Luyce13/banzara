@@ -46,6 +46,14 @@ const userSchema = new mongoose.Schema(
       },
       label: String, // Human readable address
     },
+    avgRating: {
+      type: Number,
+      default: 0,
+    },
+    reviewCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

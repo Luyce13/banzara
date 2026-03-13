@@ -1,15 +1,38 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const chatSchema = new mongoose.Schema(
+const conversationSchema = new mongoose.Schema(
   {
-    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    listing: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing' },
+    participants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+    ],
+    listing: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Listing",
+      required: true,
+      index: true,
+    },
+    lastMessage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Message",
+    },
+    lastMessageAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-const Chat = mongoose.model('Chat', chatSchema);
+// One conversation per pair of users, regardless of listing context. 
+// The 'listing' field tracks the most recent listing being discussed.
+conversationSchema.index({ participants: 1 });
 
-module.exports = Chat;
+const Conversation = mongoose.model("Conversation", conversationSchema);
+
+module.exports = Conversation;

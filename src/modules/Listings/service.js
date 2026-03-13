@@ -8,7 +8,11 @@ const logger = require("../../utils/logger").child({ context: "Listings" });
 const createListing = async (body, userId) => {
   body.seller = userId;
   const listing = await Listing.create(body);
-  return listing.populate(["seller", "category", "images"]);
+  return listing
+    .populate("seller", "name avatar")
+    .populate("category", "name slug")
+    .populate("images", "url")
+    .lean();
 };
 
 const getListings = async (query, options) => {
@@ -37,7 +41,8 @@ const getListingBySlug = async (slug) => {
   const listing = await Listing.findOne({ slug, status: "active" })
     .populate("seller", "name avatar")
     .populate("category", "name slug attributeSchema")
-    .populate("images", "url mimetype");
+    .populate("images", "url")
+    .lean();
 
   if (!listing) {
     throw new ApiError(httpStatus.NOT_FOUND, "Listing not found");
@@ -46,7 +51,7 @@ const getListingBySlug = async (slug) => {
 };
 
 const getListingById = async (id) => {
-  const listing = await Listing.findById(id);
+  const listing = await Listing.findById(id).lean();
   if (!listing) {
     throw new ApiError(httpStatus.NOT_FOUND, "Listing not found");
   }
@@ -59,7 +64,10 @@ const updateListingById = async (id, body, userId) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Listing not found");
   }
   if (String(listing.seller) !== String(userId)) {
-    throw new ApiError(httpStatus.FORBIDDEN, "You can only edit your own listings");
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      "You can only edit your own listings",
+    );
   }
 
   if (body.images) {
@@ -84,7 +92,11 @@ const updateListingById = async (id, body, userId) => {
 
   Object.assign(listing, body);
   await listing.save();
-  return listing.populate(["seller", "category", "images"]);
+  return await listing
+    .populate("seller", "name avatar")
+    .populate("category", "name slug")
+    .populate("images", "url")
+    .lean();
 };
 
 const deleteListingById = async (id, userId) => {
@@ -93,7 +105,10 @@ const deleteListingById = async (id, userId) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Listing not found");
   }
   if (String(listing.seller) !== String(userId)) {
-    throw new ApiError(httpStatus.FORBIDDEN, "You can only delete your own listings");
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      "You can only delete your own listings",
+    );
   }
 
   listing.status = "expired";
