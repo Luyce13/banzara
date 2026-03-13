@@ -27,7 +27,7 @@ const corsConfig = {
       callback(null, true);
     } else {
       logger.fatal(`CORS blocked origin: ${origin}`);
-      callback(new AppError("Not allowed by CORS", 403));
+      callback(new AppError(`${origin} is not allowed by CORS`, 403));
     }
   },
 };
