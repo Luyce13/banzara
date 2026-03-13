@@ -3,6 +3,9 @@ const ALLOWED_ORIGINS = {
   development: [/^http:\/\/localhost:\d+$/],
 };
 
+const logger = require("../utils/logger").child({ context: "CORS" });
+const AppError = require("../utils/AppError");
+
 const isOriginAllowed = (origin) => {
   if (!origin) return true;
 
@@ -23,8 +26,8 @@ const corsConfig = {
     if (isOriginAllowed(origin)) {
       callback(null, true);
     } else {
-      console.warn(`CORS blocked origin: ${origin}`);
-      callback(new Error("Not allowed by CORS"));
+      logger.fatal(`CORS blocked origin: ${origin}`);
+      callback(new AppError("Not allowed by CORS", 403));
     }
   },
 };
