@@ -25,8 +25,13 @@
             },
             "url": {
               "raw": "{{banzara}}/auth/register",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             }
           },
           "response": []
@@ -47,8 +52,13 @@
             },
             "url": {
               "raw": "{{banzara}}/auth/login",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           },
           "response": []
@@ -60,8 +70,13 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/auth/verify-email?token=YOUR_TOKEN_HERE",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "verify-email"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "verify-email"
+              ],
               "query": [
                 {
                   "key": "token",
@@ -88,8 +103,13 @@
             },
             "url": {
               "raw": "{{banzara}}/auth/resend-verification-email",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "resend-verification-email"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "resend-verification-email"
+              ]
             }
           },
           "response": []
@@ -101,8 +121,13 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/auth/refresh-tokens",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "refresh-tokens"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "refresh-tokens"
+              ]
             }
           },
           "response": []
@@ -114,8 +139,13 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/auth/logout",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "logout"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
             }
           },
           "response": []
@@ -136,8 +166,13 @@
             },
             "url": {
               "raw": "{{banzara}}/auth/forgot-password",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "forgot-password"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
             }
           },
           "response": []
@@ -158,8 +193,13 @@
             },
             "url": {
               "raw": "{{banzara}}/auth/reset-password?token=YOUR_TOKEN_HERE",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "reset-password"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ],
               "query": [
                 {
                   "key": "token",
@@ -186,8 +226,13 @@
             },
             "url": {
               "raw": "{{banzara}}/auth/change-password",
-              "host": ["{{banzara}}"],
-              "path": ["auth", "change-password"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
             }
           },
           "response": []
@@ -204,8 +249,13 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/files/:id",
-              "host": ["{{banzara}}"],
-              "path": ["files", ":id"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "files",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -228,8 +278,13 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/users/me",
-              "host": ["{{banzara}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -261,8 +316,13 @@
             },
             "url": {
               "raw": "{{banzara}}/users/me",
-              "host": ["{{banzara}}"],
-              "path": ["users", "me"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
             }
           },
           "response": []
@@ -279,8 +339,12 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/categories",
-              "host": ["{{banzara}}"],
-              "path": ["categories"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "categories"
+              ]
             }
           },
           "response": []
@@ -292,8 +356,14 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/categories/slug/real-estate",
-              "host": ["{{banzara}}"],
-              "path": ["categories", "slug", "real-estate"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "categories",
+                "slug",
+                "real-estate"
+              ]
             }
           },
           "response": []
@@ -314,8 +384,12 @@
             },
             "url": {
               "raw": "{{banzara}}/categories",
-              "host": ["{{banzara}}"],
-              "path": ["categories"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "categories"
+              ]
             }
           },
           "response": []
@@ -336,8 +410,13 @@
             },
             "url": {
               "raw": "{{banzara}}/categories/:id",
-              "host": ["{{banzara}}"],
-              "path": ["categories", ":id"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
               "variable": [
                 {
                   "key": "id",
@@ -347,127 +426,52 @@
             }
           },
           "response": []
-        }
-      ]
-    },
-    {
-      "name": "Bookings",
-      "item": [
-        {
-          "name": "Create Booking",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"listing\": \"LISTING_ID_HERE\",\n    \"note\": \"I want to book this service\",\n    \"scheduledAt\": \"2024-12-25T10:00:00Z\"\n}"
-            },
-            "url": {
-              "raw": "{{banzara}}/bookings",
-              "host": ["{{banzara}}"],
-              "path": ["bookings"]
-            }
-          },
-          "response": []
         },
         {
-          "name": "My Bookings (Buyer)",
+          "name": "Get Category Filters",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{banzara}}/bookings/me?role=buyer",
-              "host": ["{{banzara}}"],
-              "path": ["bookings", "me"],
-              "query": [{ "key": "role", "value": "buyer" }]
+              "raw": "{{banzara}}/categories/:id/filters",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "categories",
+                ":id",
+                "filters"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "CATEGORY_ID_HERE"
+                }
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "Get Booking by ID",
+          "name": "Delete Category (Admin)",
           "request": {
-            "method": "GET",
+            "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{banzara}}/bookings/:id",
-              "host": ["{{banzara}}"],
-              "path": ["bookings", ":id"],
-              "variable": [{ "key": "id", "value": "BOOKING_ID_HERE" }]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Booking Status",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"status\": \"confirmed\"\n}"
-            },
-            "url": {
-              "raw": "{{banzara}}/bookings/:id/status",
-              "host": ["{{banzara}}"],
-              "path": ["bookings", ":id", "status"],
-              "variable": [{ "key": "id", "value": "BOOKING_ID_HERE" }]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Reviews",
-      "item": [
-        {
-          "name": "Create Review",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Content-Type", "value": "application/json" }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"booking\": \"BOOKING_ID_HERE\",\n    \"rating\": 5,\n    \"comment\": \"Excellent service!\"\n}"
-            },
-            "url": {
-              "raw": "{{banzara}}/reviews",
-              "host": ["{{banzara}}"],
-              "path": ["reviews"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get User Reviews",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{banzara}}/reviews/user/:userId",
-              "host": ["{{banzara}}"],
-              "path": ["reviews", "user", ":userId"],
-              "variable": [{ "key": "userId", "value": "USER_ID_HERE" }]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Listing Reviews",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{banzara}}/reviews/listing/:listingId",
-              "host": ["{{banzara}}"],
-              "path": ["reviews", "listing", ":listingId"],
-              "variable": [{ "key": "listingId", "value": "LISTING_ID_HERE" }]
+              "raw": "{{banzara}}/categories/:id",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "categories",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "CATEGORY_ID_HERE"
+                }
+              ]
             }
           },
           "response": []
@@ -484,8 +488,13 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/chat/conversations",
-              "host": ["{{banzara}}"],
-              "path": ["chat", "conversations"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "chat",
+                "conversations"
+              ]
             }
           },
           "response": []
@@ -495,7 +504,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -503,8 +515,13 @@
             },
             "url": {
               "raw": "{{banzara}}/chat/conversations",
-              "host": ["{{banzara}}"],
-              "path": ["chat", "conversations"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "chat",
+                "conversations"
+              ]
             }
           },
           "response": []
@@ -516,9 +533,21 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/chat/conversations/:id/messages",
-              "host": ["{{banzara}}"],
-              "path": ["chat", "conversations", ":id", "messages"],
-              "variable": [{ "key": "id", "value": "CONVERSATION_ID_HERE" }]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "chat",
+                "conversations",
+                ":id",
+                "messages"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "CONVERSATION_ID_HERE"
+                }
+              ]
             }
           },
           "response": []
@@ -528,7 +557,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -536,9 +568,21 @@
             },
             "url": {
               "raw": "{{banzara}}/chat/conversations/:id/messages",
-              "host": ["{{banzara}}"],
-              "path": ["chat", "conversations", ":id", "messages"],
-              "variable": [{ "key": "id", "value": "CONVERSATION_ID_HERE" }]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "chat",
+                "conversations",
+                ":id",
+                "messages"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "CONVERSATION_ID_HERE"
+                }
+              ]
             }
           },
           "response": []
@@ -550,9 +594,21 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/chat/conversations/:id/read",
-              "host": ["{{banzara}}"],
-              "path": ["chat", "conversations", ":id", "read"],
-              "variable": [{ "key": "id", "value": "CONVERSATION_ID_HERE" }]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "chat",
+                "conversations",
+                ":id",
+                "read"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "CONVERSATION_ID_HERE"
+                }
+              ]
             }
           },
           "response": []
@@ -569,11 +625,21 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/listings?page=1&limit=10",
-              "host": ["{{banzara}}"],
-              "path": ["listings"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             }
           },
@@ -586,10 +652,18 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/listings/search?q=honda",
-              "host": ["{{banzara}}"],
-              "path": ["listings", "search"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings",
+                "search"
+              ],
               "query": [
-                { "key": "q", "value": "honda" }
+                {
+                  "key": "q",
+                  "value": "honda"
+                }
               ]
             }
           },
@@ -602,12 +676,26 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/listings/nearby?lng=73.0479&lat=33.6844&radius=10",
-              "host": ["{{banzara}}"],
-              "path": ["listings", "nearby"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings",
+                "nearby"
+              ],
               "query": [
-                { "key": "lng", "value": "73.0479" },
-                { "key": "lat", "value": "33.6844" },
-                { "key": "radius", "value": "10" }
+                {
+                  "key": "lng",
+                  "value": "73.0479"
+                },
+                {
+                  "key": "lat",
+                  "value": "33.6844"
+                },
+                {
+                  "key": "radius",
+                  "value": "10"
+                }
               ]
             }
           },
@@ -620,8 +708,14 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/listings/slug/honda-cb150r-abc123",
-              "host": ["{{banzara}}"],
-              "path": ["listings", "slug", "honda-cb150r-abc123"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings",
+                "slug",
+                "honda-cb150r-abc123"
+              ]
             }
           },
           "response": []
@@ -633,8 +727,13 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/listings/me",
-              "host": ["{{banzara}}"],
-              "path": ["listings", "me"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings",
+                "me"
+              ]
             }
           },
           "response": []
@@ -647,19 +746,51 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "Honda CB150R 2024", "type": "text" },
-                { "key": "description", "value": "Like new condition", "type": "text" },
-                { "key": "category", "value": "CATEGORY_ID_HERE", "type": "text" },
-                { "key": "type", "value": "product", "type": "text" },
-                { "key": "price", "value": "350000", "type": "text" },
-                { "key": "condition", "value": "used", "type": "text" },
-                { "key": "images", "type": "file", "src": [] }
+                {
+                  "key": "title",
+                  "value": "Honda CB150R 2024",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Like new condition",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "CATEGORY_ID_HERE",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "value": "product",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "350000",
+                  "type": "text"
+                },
+                {
+                  "key": "condition",
+                  "value": "used",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": []
+                }
               ]
             },
             "url": {
               "raw": "{{banzara}}/listings",
-              "host": ["{{banzara}}"],
-              "path": ["listings"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings"
+              ]
             }
           },
           "response": []
@@ -672,17 +803,37 @@
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "title", "value": "Updated Title", "type": "text" },
-                { "key": "price", "value": "300000", "type": "text" },
-                { "key": "images", "type": "file", "src": [] }
+                {
+                  "key": "title",
+                  "value": "Updated Title",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "300000",
+                  "type": "text"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": []
+                }
               ]
             },
             "url": {
               "raw": "{{banzara}}/listings/:id",
-              "host": ["{{banzara}}"],
-              "path": ["listings", ":id"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "LISTING_ID_HERE" }
+                {
+                  "key": "id",
+                  "value": "LISTING_ID_HERE"
+                }
               ]
             }
           },
@@ -695,10 +846,18 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/listings/:id",
-              "host": ["{{banzara}}"],
-              "path": ["listings", ":id"],
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "listings",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "LISTING_ID_HERE" }
+                {
+                  "key": "id",
+                  "value": "LISTING_ID_HERE"
+                }
               ]
             }
           },
@@ -716,8 +875,130 @@
             "header": [],
             "url": {
               "raw": "{{banzara}}/users/ping",
-              "host": ["{{banzara}}"],
-              "path": ["users", "ping"]
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "users",
+                "ping"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Stripe Webhook",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{banzara}}/payments/webhook",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "payments",
+                "webhook"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Subscription Checkout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"plan\": \"verified\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/payments/create-subscription",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "payments",
+                "create-subscription"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Boost Checkout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"listingId\": \"LISTING_ID_HERE\"\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/payments/create-boost",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "payments",
+                "create-boost"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "Get My Subscription",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/subscriptions/me",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "subscriptions",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subscription Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/subscriptions/plans",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "subscriptions",
+                "plans"
+              ]
             }
           },
           "response": []
