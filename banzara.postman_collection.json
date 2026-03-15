@@ -1010,6 +1010,25 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Create Customer Portal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/payments/create-portal",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "payments",
+                "create-portal"
+              ]
+            },
+            "description": "Generate a session URL for the Stripe Customer Portal."
+          },
+          "response": []
         }
       ]
     },
