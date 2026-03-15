@@ -21,7 +21,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\",\n    \"name\": \"Test User\"\n}"
+              "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"password123\",\n    \"name\": \"Test User\",\n    \"userType\": \"individual\"\n}"
             },
             "url": {
               "raw": "{{banzara}}/auth/register",
@@ -310,6 +310,21 @@
                 {
                   "key": "address",
                   "value": "{\n    \"type\": \"Point\",\n    \"coordinates\": [73.0479, 33.6844],\n    \"label\": \"Islamabad, Pakistan\"\n}",
+                  "type": "text"
+                },
+                {
+                  "key": "userType",
+                  "value": "individual",
+                  "type": "text"
+                },
+                {
+                  "key": "businessProfile",
+                  "value": "{\n    \"companyName\": \"Bazaarna Corp\",\n    \"taxId\": \"123456789\",\n    \"website\": \"https://bazaarna.zone\",\n    \"businessHours\": \"Mon-Fri 09:00-18:00\"\n}",
+                  "type": "text"
+                },
+                {
+                  "key": "contactInfo",
+                  "value": "{\n    \"whatsapp\": \"+905000000000\",\n    \"telegram\": \"bazaarna_admin\"\n}",
                   "type": "text"
                 }
               ]
@@ -780,6 +795,11 @@
                   "key": "images",
                   "type": "file",
                   "src": []
+                },
+                {
+                  "key": "contactInfo",
+                  "value": "{\n    \"whatsapp\": \"+905000000001\",\n    \"phone\": \"+905000000002\"\n}",
+                  "type": "text"
                 }
               ]
             },

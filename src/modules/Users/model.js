@@ -28,6 +28,12 @@ const userSchema = new mongoose.Schema(
       default: "user",
       index: true,
     },
+    userType: {
+      type: String,
+      enum: ["individual", "business", "agent"],
+      default: "individual",
+      index: true,
+    },
     isEmailVerified: {
       type: Boolean,
       default: false,
@@ -61,6 +67,23 @@ const userSchema = new mongoose.Schema(
     isVerified: {
       type: Boolean,
       default: false,
+    },
+    businessProfile: {
+      legalName: { type: String, trim: true },
+      taxId: { type: String, trim: true },
+      businessHours: { type: String },
+      googleMapsUrl: { type: String },
+      website: { type: String },
+      description: {
+        en: { type: String },
+        tr: { type: String },
+        ar: { type: String },
+      },
+    },
+    contactMethods: {
+      whatsapp: { type: String },
+      phone: { type: String },
+      telegram: { type: String },
     },
   },
   {

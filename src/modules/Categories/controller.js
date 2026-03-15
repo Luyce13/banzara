@@ -11,14 +11,12 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategoryTree = catchAsync(async (req, res) => {
-  const lang = req.headers['accept-language'] || 'en';
-  const tree = await categoryService.getCategoryTree(lang);
+  const tree = await categoryService.getCategoryTree();
   return ApiResponse(res, httpStatus.OK, "Category tree retrieved", tree);
 });
 
 const getCategory = catchAsync(async (req, res) => {
-  const lang = req.headers['accept-language'] || 'en';
-  const category = await categoryService.getCategoryBySlug(req.params.slug, lang);
+  const category = await categoryService.getCategoryBySlug(req.params.slug);
   return ApiResponse(res, httpStatus.OK, "Category retrieved", category);
 });
 

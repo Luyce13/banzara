@@ -49,6 +49,16 @@ const listingSchema = new mongoose.Schema(
       type: String,
       enum: ["new", "used", "refurbished"],
     },
+    contactInfo: {
+      whatsapp: { type: String },
+      phone: { type: String },
+      telegram: { type: String },
+      socialLinks: {
+        instagram: { type: String },
+        tiktok: { type: String },
+        facebook: { type: String },
+      },
+    },
     status: {
       type: String,
       enum: ["draft", "active", "sold", "expired", "archived"],

@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema(
   {
-    name: {
-      en: { type: String, required: true, trim: true },
-      tr: { type: String, required: true, trim: true },
-      ar: { type: String, required: true, trim: true },
-    },
+    name: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true },
     parent: {
       type: mongoose.Schema.Types.ObjectId,
