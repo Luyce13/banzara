@@ -50,9 +50,35 @@ const updateUserById = async (userId, updateBody) => {
   return user.populate("avatar").lean();
 };
 
+const getBusinessDirectory = async (query, options) => {
+  const filter = {
+    ...query,
+    userType: { $in: ["business", "agent"] },
+    isDeleted: false,
+  };
+
+  const users = await User.find(filter)
+    .sort(options.sort || { "businessProfile.companyName": 1 })
+    .skip(options.skip)
+    .limit(options.limit)
+    .select("name avatar userType businessProfile address contactInfo")
+    .populate("avatar", "url")
+    .lean();
+
+  const total = await User.countDocuments(filter);
+
+  return {
+    users,
+    total,
+    page: options.page,
+    pages: Math.ceil(total / options.limit),
+  };
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
   getUserById,
   updateUserById,
+  getBusinessDirectory,
 };

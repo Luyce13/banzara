@@ -3,6 +3,7 @@ const { ENV } = require("./constants");
 const mongoose = require("mongoose");
 const app = require("./app");
 const logger = require("./utils/logger").child({ context: "Server" });
+const { initLifecycleJobs } = require("./utils/lifecycle.job");
 
 let server;
 const PORT = ENV.PORT;
@@ -16,6 +17,7 @@ mongoose
   .connect(DB_URI)
   .then(() => {
     logger.info("Connected to MongoDB");
+    initLifecycleJobs();
   })
   .catch((err) => {
     logger.error(err, "Failed to connect to MongoDB");

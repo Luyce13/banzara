@@ -22,7 +22,8 @@ const handleWebhook = async (req, res) => {
       await handleCheckoutCompleted(session);
       break;
     case "invoice.paid":
-      // Handle recurring subscription payments
+      const invoice = event.data.object;
+      await handleInvoicePaid(invoice);
       break;
     default:
       logger.info(`Unhandled event type ${event.type}`);
@@ -58,6 +59,30 @@ async function handleCheckoutCompleted(session) {
     });
     logger.info(`Listing ${listingId} boosted until ${boostedUntil}`);
   }
+}
+
+async function handleInvoicePaid(invoice) {
+  const stripeSubscriptionId = invoice.subscription;
+  if (!stripeSubscriptionId) return;
+
+  const subscription = await Subscription.findOne({ stripeSubscriptionId });
+  if (!subscription) return;
+
+  const plans = require("../Subscriptions/service").PLANS;
+  const plan = subscription.plan;
+
+  // Renew the period and reset quotas
+  await Subscription.findOneAndUpdate(
+    { stripeSubscriptionId },
+    {
+      status: "active",
+      featuredAdsQuota: plans[plan].featuredQuota,
+      boostsQuota: plans[plan].boostQuota,
+      currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    }
+  );
+  
+  logger.info(`Subscription ${stripeSubscriptionId} renewed via invoice.paid`);
 }
 
 module.exports = {

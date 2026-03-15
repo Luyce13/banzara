@@ -272,6 +272,35 @@
       "name": "Users",
       "item": [
         {
+          "name": "Business Directory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/users/directory?page=1&limit=10",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "users",
+                "directory"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Public directory of Business and Agent profiles."
+          },
+          "response": []
+        },
+        {
           "name": "Get My Profile",
           "request": {
             "method": "GET",

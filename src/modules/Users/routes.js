@@ -3,11 +3,13 @@ const usersController = require("./controller");
 const authMiddleware = require("../../middlewares/auth");
 const validate = require("../../middlewares/validate");
 const userValidation = require("./validator");
+const queryParser = require("../../middlewares/queryParser");
 
 const upload = require("../../middlewares/multer");
 
 const router = express.Router();
 
+router.get("/directory", queryParser, usersController.getBusinessDirectory);
 router.get("/me", authMiddleware, usersController.getMe);
 router.patch(
   "/me",

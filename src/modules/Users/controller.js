@@ -36,8 +36,17 @@ const updateMe = catchAsync(async (req, res) => {
   }
 });
 
+const getBusinessDirectory = catchAsync(async (req, res) => {
+  const result = await userService.getBusinessDirectory(
+    req.mongoQuery,
+    req.mongoOptions
+  );
+  return ApiResponse(res, httpStatus.OK, "Business directory retrieved", result);
+});
+
 module.exports = {
   ping,
   getMe,
   updateMe,
+  getBusinessDirectory,
 };
