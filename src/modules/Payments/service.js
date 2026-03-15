@@ -83,7 +83,25 @@ const createBoostCheckout = async (userId, listingId) => {
   return { url: session.url };
 };
 
+/**
+ * Create a Stripe Customer Portal session
+ */
+const createCustomerPortal = async (userId) => {
+  const subscription = await Subscription.findOne({ user: userId });
+  if (!subscription || !subscription.stripeCustomerId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "No active billing profile found");
+  }
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: subscription.stripeCustomerId,
+    return_url: `${ENV.CLIENT_URL}/profile/subscription`,
+  });
+
+  return { url: session.url };
+};
+
 module.exports = {
   createSubscriptionCheckout,
   createBoostCheckout,
+  createCustomerPortal,
 };

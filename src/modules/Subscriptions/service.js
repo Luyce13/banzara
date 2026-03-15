@@ -55,7 +55,7 @@ const checkListingQuota = async (userId) => {
   
   const activeListingsCount = await require("../Listings/model").countDocuments({ 
     seller: userId, 
-    status: { $in: ["active", "featured", "draft"] }, // Basic check
+    status: { $in: ["active", "featured", "draft"] },
     isDeleted: false 
   });
   
@@ -69,8 +69,26 @@ const checkListingQuota = async (userId) => {
   return true;
 };
 
+/**
+ * Revert user to free plan (triggered by cancellation or payment failure)
+ */
+const revertToFreePlan = async (userId) => {
+  await Subscription.findOneAndUpdate(
+    { user: userId },
+    {
+      plan: "free",
+      status: "active",
+      featuredAdsQuota: PLANS.free.featuredQuota,
+      boostsQuota: PLANS.free.boostQuota,
+      stripeSubscriptionId: null,
+    }
+  );
+  logger.info(`User ${userId} reverted to free plan`);
+};
+
 module.exports = {
   getOrCreateSubscription,
   checkListingQuota,
+  revertToFreePlan,
   PLANS,
 };

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const app = require("./app");
 const logger = require("./utils/logger").child({ context: "Server" });
 const { initLifecycleJobs } = require("./utils/lifecycle.job");
+const { initSocket } = require("./utils/socket.service");
 
 let server;
 const PORT = ENV.PORT;
@@ -12,6 +13,9 @@ const DB_URI = ENV.MONGODB_URI;
 server = app.listen(PORT, "0.0.0.0", () => {
   logger.info(`Listening to port http://localhost:${PORT}`);
 });
+
+// Initialize Socket.io
+initSocket(server);
 
 mongoose
   .connect(DB_URI)

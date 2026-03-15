@@ -4,6 +4,7 @@ const Listing = require("../Listings/model");
 const ApiError = require("../../utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
+const socketService = require("../../utils/socket.service");
 
 /**
  * Get or create a conversation for a listing
@@ -85,7 +86,12 @@ const sendMessage = async (conversationId, body, userId) => {
   conversation.lastMessageAt = message.createdAt;
   await conversation.save();
 
-  return message.populate("sender", "name avatar");
+  const populatedMessage = await message.populate("sender", "name avatar");
+  
+  // Real-time emission
+  socketService.emitToConversation(conversationId, "new_message", populatedMessage);
+  
+  return populatedMessage;
 };
 
 /**

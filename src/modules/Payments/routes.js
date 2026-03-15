@@ -20,5 +20,6 @@ router.post(
 );
 
 router.post("/create-boost", auth, paymentController.createBoostCheckout);
+router.get("/create-portal", auth, paymentController.createCustomerPortal);
 
 module.exports = router;

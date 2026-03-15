@@ -11,12 +11,18 @@ const createSubscriptionCheckout = catchAsync(async (req, res) => {
 });
 
 const createBoostCheckout = catchAsync(async (req, res) => {
-  const { listingId } = req.body;
+  const { listingId } = req.query || req.body;
   const result = await paymentService.createBoostCheckout(req.user.id, listingId);
   return ApiResponse(res, httpStatus.OK, "Ad boost checkout session created", result);
+});
+
+const createCustomerPortal = catchAsync(async (req, res) => {
+  const result = await paymentService.createCustomerPortal(req.user.id);
+  return ApiResponse(res, httpStatus.OK, "Customer portal session created", result);
 });
 
 module.exports = {
   createSubscriptionCheckout,
   createBoostCheckout,
+  createCustomerPortal,
 };

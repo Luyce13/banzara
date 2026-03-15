@@ -25,6 +25,14 @@ const handleWebhook = async (req, res) => {
       const invoice = event.data.object;
       await handleInvoicePaid(invoice);
       break;
+    case "customer.subscription.deleted":
+      const deletedSub = event.data.object;
+      await handleSubscriptionDeleted(deletedSub);
+      break;
+    case "invoice.payment_failed":
+      const failedInvoice = event.data.object;
+      await handlePaymentFailed(failedInvoice);
+      break;
     default:
       logger.info(`Unhandled event type ${event.type}`);
   }
@@ -83,6 +91,26 @@ async function handleInvoicePaid(invoice) {
   );
   
   logger.info(`Subscription ${stripeSubscriptionId} renewed via invoice.paid`);
+}
+
+async function handleSubscriptionDeleted(subscription) {
+  const stripeSubscriptionId = subscription.id;
+  const subDoc = await Subscription.findOne({ stripeSubscriptionId });
+  if (subDoc) {
+    const subscriptionService = require("../Subscriptions/service");
+    await subscriptionService.revertToFreePlan(subDoc.user);
+  }
+}
+
+async function handlePaymentFailed(invoice) {
+  const stripeSubscriptionId = invoice.subscription;
+  if (!stripeSubscriptionId) return;
+
+  await Subscription.findOneAndUpdate(
+    { stripeSubscriptionId },
+    { status: "past_due" }
+  );
+  logger.warn(`Subscription ${stripeSubscriptionId} marked as past_due`);
 }
 
 module.exports = {
