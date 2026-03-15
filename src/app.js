@@ -25,6 +25,12 @@ app.use(
 // set security HTTP headers
 app.use(helmet());
 
+// Stripe Webhook needs raw body - must be defined BEFORE express.json()
+app.use(
+  "/api/v1/payments/webhook",
+  express.raw({ type: "application/json" }),
+);
+
 // parse json request body
 app.use(express.json());
 

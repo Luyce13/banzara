@@ -20,10 +20,6 @@ const defaultRoutes = [
     route: require("./modules/Categories/routes"),
   },
   {
-    path: "/bookings",
-    route: require("./modules/Bookings/routes"),
-  },
-  {
     path: "/ledger",
     route: require("./modules/Ledger/routes"),
   },
@@ -36,12 +32,16 @@ const defaultRoutes = [
     route: require("./modules/Chat/routes"),
   },
   {
-    path: "/reviews",
-    route: require("./modules/Reviews/routes"),
-  },
-  {
     path: "/notifications",
     route: require("./modules/Notifications/routes"),
+  },
+  {
+    path: "/payments",
+    route: require("./modules/Payments/routes"),
+  },
+  {
+    path: "/subscriptions",
+    route: require("./modules/Subscriptions/routes"),
   },
 ];
 

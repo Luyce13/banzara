@@ -71,6 +71,9 @@ importers:
       rotating-file-stream:
         specifier: ^3.2.9
         version: 3.2.9
+      stripe:
+        specifier: ^20.4.1
+        version: 20.4.1
       xss:
         specifier: ^1.0.15
         version: 1.0.15
@@ -1407,6 +1410,15 @@ packages:
   strip-json-comments@5.0.3:
     resolution: {integrity: sha512-1tB5mhVo7U+ETBKNf92xT4hrQa3pm0MZ0PQvuDnWgAAGHDsfp4lPSpiS6psrSiet87wyGPh9ft6wmhOMQ0hDiw==}
     engines: {node: '>=14.16'}
+
+  stripe@20.4.1:
+    resolution: {integrity: sha512-axCguHItc8Sxt0HC6aSkdVRPffjYPV7EQqZRb2GkIa8FzWDycE7nHJM19C6xAIynH1Qp1/BHiopSi96jGBxT0w==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      '@types/node': '>=16'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
 
   strnum@2.2.0:
     resolution: {integrity: sha512-Y7Bj8XyJxnPAORMZj/xltsfo55uOiyHcU2tnAVzHUnSJR/KsEX+9RoDeXEnsXtl/CX4fAcrt64gZ13aGaWPeBg==}
@@ -3243,6 +3255,8 @@ snapshots:
       safe-buffer: 5.2.1
 
   strip-json-comments@5.0.3: {}
+
+  stripe@20.4.1: {}
 
   strnum@2.2.0: {}
 

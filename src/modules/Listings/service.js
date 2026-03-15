@@ -3,9 +3,13 @@ const ApiError = require("../../utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
 const fileService = require("../Files/service");
+const subscriptionService = require("../Subscriptions/service");
 const logger = require("../../utils/logger").child({ context: "Listings" });
 
 const createListing = async (body, userId) => {
+  // Enforce listing quota (Free, Verified, Business)
+  await subscriptionService.checkListingQuota(userId);
+
   body.seller = userId;
   const listing = await Listing.create(body);
   return listing

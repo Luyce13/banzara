@@ -51,9 +51,27 @@ const listingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["draft", "active", "sold", "expired"],
+      enum: ["draft", "active", "sold", "expired", "archived"],
       default: "active",
       index: true,
+    },
+    // Classifieds Metadata
+    expiresAt: {
+      type: Date,
+      index: true,
+    },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+      index: true,
+    },
+    boostedUntil: {
+      type: Date,
+      index: true,
+    },
+    viewCount: {
+      type: Number,
+      default: 0,
     },
     avgRating: {
       type: Number,
