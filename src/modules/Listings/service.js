@@ -21,9 +21,9 @@ const createListing = async (body, userId) => {
 
 const getListings = async (query, options) => {
   const filter = { ...query, status: "active" };
-  const sort = { boostedUntil: -1, ...options.sort };
   const listings = await Listing.find(filter)
-    .sort(sort)
+    .sort({ boostedUntil: -1 })
+    .sort(options.sort)
     .skip(options.skip)
     .limit(options.limit)
     .select(options.select)
