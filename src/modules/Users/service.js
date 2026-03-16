@@ -17,7 +17,7 @@ const getUserByEmail = async (email) => {
 const fileService = require("../Files/service");
 
 const getUserById = async (id) => {
-  return User.findById(id).populate("avatar");
+  return User.findById(id).populate("avatar", "url");
 };
 
 const updateUserById = async (userId, updateBody) => {
@@ -47,7 +47,7 @@ const updateUserById = async (userId, updateBody) => {
 
   Object.assign(user, updateBody);
   await user.save();
-  return user.populate("avatar").lean();
+  return await user.populate("avatar", "url");
 };
 
 const getBusinessDirectory = async (query, options) => {
