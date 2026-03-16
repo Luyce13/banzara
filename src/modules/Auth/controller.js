@@ -15,7 +15,6 @@ const processTokensForResponse = (res, tokens) => {
       secure: true,
       sameSite: "None",
       expires: tokens.access.expires,
-      domain: "localhost",
     });
     delete tokens.access;
   }
@@ -26,7 +25,6 @@ const processTokensForResponse = (res, tokens) => {
         secure: true,
         sameSite: "None",
         expires: tokens.refresh.expires,
-        domain: "localhost",
       });
     }
   }
