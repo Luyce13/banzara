@@ -12,8 +12,8 @@ const processTokensForResponse = (res, tokens) => {
   if (tokens.access) {
     res.cookie("accessToken", tokens.access.token, {
       httpOnly: true,
-      secure: ENV.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "None",
       expires: tokens.access.expires,
     });
     delete tokens.access;
@@ -22,8 +22,8 @@ const processTokensForResponse = (res, tokens) => {
     if (tokens.refresh) {
       res.cookie("refreshToken", tokens.refresh.token, {
         httpOnly: true,
-        secure: ENV.NODE_ENV === "production",
-        sameSite: "strict",
+        secure: true,
+        sameSite: "None",
         expires: tokens.refresh.expires,
       });
     }
