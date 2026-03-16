@@ -61,5 +61,5 @@ const initLifecycleJobs = () => {
 
 module.exports = {
   initLifecycleJobs,
-  expireListings,
+  runMarketplaceCleanups,
 };

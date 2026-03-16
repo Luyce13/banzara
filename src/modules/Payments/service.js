@@ -15,10 +15,10 @@ const createSubscriptionCheckout = async (userId, plan) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid plan selected");
   }
 
-  // Define Stripe price IDs (should ideally be in ENV or Constants)
+  // Define Stripe price IDs
   const priceIds = {
-    verified: process.env.STRIPE_PRICE_VERIFIED,
-    business: process.env.STRIPE_PRICE_BUSINESS,
+    verified: ENV.STRIPE_PRICE_VERIFIED,
+    business: ENV.STRIPE_PRICE_BUSINESS,
   };
 
   if (!priceIds[plan]) {

@@ -18,6 +18,8 @@ const ENV = {
   S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
   S3_SECRET_KEY: process.env.S3_SECRET_KEY,
   S3_ENDPOINT: process.env.S3_ENDPOINT, // Optional for S3-compatible storage
+  STRIPE_PRICE_VERIFIED: process.env.STRIPE_PRICE_VERIFIED,
+  STRIPE_PRICE_BUSINESS: process.env.STRIPE_PRICE_BUSINESS,
 };
 
 const LOG_CONFIG = {
