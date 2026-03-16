@@ -62,7 +62,6 @@ async function handleCheckoutCompleted(session) {
   } else if (type === "ad_boost") {
     const boostedUntil = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 day boost
     await Listing.findByIdAndUpdate(listingId, {
-      isFeatured: true,
       boostedUntil: boostedUntil,
     });
     logger.info(`Listing ${listingId} boosted until ${boostedUntil}`);

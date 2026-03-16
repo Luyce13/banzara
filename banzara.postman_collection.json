@@ -1072,6 +1072,61 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Banners",
+      "item": [
+        {
+          "name": "Get Banners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{banzara}}/banners?position=top",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "banners"
+              ],
+              "query": [
+                {
+                  "key": "position",
+                  "value": "top"
+                }
+              ]
+            },
+            "description": "Fetch active banners by position (top, sidebar, in-feed, popup)."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Banner (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Spring Sale\",\n    \"imageUrl\": \"https://example.com/banner.jpg\",\n    \"linkUrl\": \"https://example.com/shop\",\n    \"position\": \"top\",\n    \"order\": 1,\n    \"durationDays\": 30\n}"
+            },
+            "url": {
+              "raw": "{{banzara}}/banners",
+              "host": [
+                "{{banzara}}"
+              ],
+              "path": [
+                "banners"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [

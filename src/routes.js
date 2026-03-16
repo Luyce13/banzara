@@ -43,6 +43,10 @@ const defaultRoutes = [
     path: "/subscriptions",
     route: require("./modules/Subscriptions/routes"),
   },
+  {
+    path: "/banners",
+    route: require("./modules/Banners/routes"),
+  },
 ];
 
 defaultRoutes.forEach((route) => {

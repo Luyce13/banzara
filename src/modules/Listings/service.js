@@ -21,7 +21,7 @@ const createListing = async (body, userId) => {
 
 const getListings = async (query, options) => {
   const filter = { ...query, status: "active" };
-  const sort = { isFeatured: -1, boostedUntil: -1, ...options.sort };
+  const sort = { boostedUntil: -1, ...options.sort };
   const listings = await Listing.find(filter)
     .sort(sort)
     .skip(options.skip)
@@ -165,7 +165,7 @@ const getMyListings = async (userId, query, options) => {
 const searchListings = async (text, query, options) => {
   const filter = { ...query, status: "active", $text: { $search: text } };
   const listings = await Listing.find(filter, { score: { $meta: "textScore" } })
-    .sort({ isFeatured: -1, boostedUntil: -1, score: { $meta: "textScore" } })
+    .sort({ boostedUntil: -1, score: { $meta: "textScore" } })
     .skip(options.skip)
     .limit(options.limit)
     .populate("seller", "name avatar")

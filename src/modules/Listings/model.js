@@ -70,9 +70,8 @@ const listingSchema = new mongoose.Schema(
       type: Date,
       index: true,
     },
-    isFeatured: {
-      type: Boolean,
-      default: false,
+    expiresAt: {
+      type: Date,
       index: true,
     },
     boostedUntil: {

@@ -7,13 +7,13 @@ const httpStatus = httpStatusObj.status || httpStatusObj;
 const PLANS = {
   free: {
     name: "Free",
-    listingLimit: 5,
+    listingLimit: 3,
     featuredQuota: 0,
     boostQuota: 0,
   },
   verified: {
     name: "Verified",
-    listingLimit: 20,
+    listingLimit: 10,
     featuredQuota: 2,
     boostQuota: 5,
   },
