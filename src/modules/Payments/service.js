@@ -15,22 +15,24 @@ const createSubscriptionCheckout = async (userId, plan) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid plan selected");
   }
 
-  // Define Stripe price IDs
-  const priceIds = {
-    verified: ENV.STRIPE_PRICE_VERIFIED,
-    business: ENV.STRIPE_PRICE_BUSINESS,
-  };
-
-  if (!priceIds[plan]) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Stripe Price ID not configured for this plan");
-  }
-
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    line_items: [{
-      price: priceIds[plan],
-      quantity: 1,
-    }],
+    line_items: [
+      {
+        price_data: {
+          currency: "usd", // default currency
+          product_data: {
+            name: `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
+            description: `BanzaarnaZone ${plan} subscription`,
+          },
+          unit_amount: plan === "verified" ? 10000 : 25000,
+          recurring: {
+            interval: "month",
+          },
+        },
+        quantity: 1,
+      },
+    ],
     mode: "subscription",
     success_url: `${ENV.CLIENT_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${ENV.CLIENT_URL}/payment-cancel`,
@@ -52,24 +54,26 @@ const createBoostCheckout = async (userId, listingId) => {
   if (!listing) {
     throw new ApiError(httpStatus.NOT_FOUND, "Listing not found");
   }
-  
+
   if (String(listing.seller) !== String(userId)) {
     throw new ApiError(httpStatus.FORBIDDEN, "You do not own this listing");
   }
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    line_items: [{
-      price_data: {
-        currency: "usd", // Or PKR depends on config
-        product_data: {
-          name: `Ad Boost: ${listing.title}`,
-          description: "Feature your ad at the top of results for 7 days",
+    line_items: [
+      {
+        price_data: {
+          currency: "usd", // Or PKR depends on config
+          product_data: {
+            name: `Ad Boost: ${listing.title}`,
+            description: "Feature your ad at the top of results for 7 days",
+          },
+          unit_amount: 500, // $5.00 fixed for boost
         },
-        unit_amount: 500, // $5.00 fixed for boost
+        quantity: 1,
       },
-      quantity: 1,
-    }],
+    ],
     mode: "payment",
     success_url: `${ENV.CLIENT_URL}/listings/${listingId}?boost_success=true`,
     cancel_url: `${ENV.CLIENT_URL}/listings/${listingId}`,
@@ -89,7 +93,10 @@ const createBoostCheckout = async (userId, listingId) => {
 const createCustomerPortal = async (userId) => {
   const subscription = await Subscription.findOne({ user: userId });
   if (!subscription || !subscription.stripeCustomerId) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "No active billing profile found");
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "No active billing profile found",
+    );
   }
 
   const session = await stripe.billingPortal.sessions.create({
