@@ -37,7 +37,7 @@ module.exports = (schema) => {
     if (this.options && this.options.includeDeleted) {
       return;
     }
-    this.where({ isDeleted: false });
+    this.where({ isDeleted: { $ne: true } });
   };
 
   schema.pre("find", filterMiddleware);

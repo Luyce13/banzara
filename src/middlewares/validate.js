@@ -12,7 +12,25 @@ const validate = (schema) => (req, res, next) => {
   }, {});
   const object = Object.keys(validSchema).reduce((acc, key) => {
     if (Object.prototype.hasOwnProperty.call(req, key)) {
-      acc[key] = req[key];
+      let value = req[key];
+      
+      // If it's an object (like req.body), try to parse its fields if they are JSON strings
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        value = Object.keys(value).reduce((fieldAcc, fieldKey) => {
+          let fieldValue = value[fieldKey];
+          if (typeof fieldValue === 'string' && (fieldValue.startsWith('{') || fieldValue.startsWith('['))) {
+            try {
+              fieldValue = JSON.parse(fieldValue);
+            } catch (e) {
+              // Ignore parsing errors
+            }
+          }
+          fieldAcc[fieldKey] = fieldValue;
+          return fieldAcc;
+        }, {});
+      }
+      
+      acc[key] = value;
     }
     return acc;
   }, {});
