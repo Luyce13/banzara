@@ -38,6 +38,7 @@ const register = catchAsync(async (req, res) => {
     res,
     httpStatus.CREATED,
     "User registered successfully. Please verify your email.",
+    { user },
   );
 });
 

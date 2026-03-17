@@ -3,6 +3,7 @@ const User = require("../Users/model");
 const ApiError = require("../../utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
+const logger = require("../../utils/logger").child({ context: "Subscriptions" });
 
 const PLANS = {
   free: {

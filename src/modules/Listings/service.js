@@ -3,6 +3,7 @@ const ApiError = require("../../utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
 const fileService = require("../Files/service");
+const Category = require("../Categories/model");
 const subscriptionService = require("../Subscriptions/service");
 const logger = require("../../utils/logger").child({ context: "Listings" });
 
@@ -10,13 +11,22 @@ const createListing = async (body, userId) => {
   // Enforce listing quota (Free, Verified, Business)
   await subscriptionService.checkListingQuota(userId);
 
+  // Ensure category exists
+  if (body.category) {
+    const categoryExists = await Category.findById(body.category);
+    if (!categoryExists) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Invalid category");
+    }
+  }
+
   body.seller = userId;
   const listing = await Listing.create(body);
-  return listing
-    .populate("seller", "name avatar")
-    .populate("category", "name slug")
-    .populate("images", "url")
-    .lean();
+  await listing.populate([
+    { path: "seller", select: "name avatar" },
+    { path: "category", select: "name slug" },
+    { path: "images", select: "url" },
+  ]);
+  return listing.toObject();
 };
 
 const getListings = async (query, options) => {
@@ -97,11 +107,12 @@ const updateListingById = async (id, body, userId) => {
 
   Object.assign(listing, body);
   await listing.save();
-  return await listing
-    .populate("seller", "name avatar")
-    .populate("category", "name slug")
-    .populate("images", "url")
-    .lean();
+  await listing.populate([
+    { path: "seller", select: "name avatar" },
+    { path: "category", select: "name slug" },
+    { path: "images", select: "url" },
+  ]);
+  return listing.toObject();
 };
 
 const deleteListingById = async (id, userId) => {
