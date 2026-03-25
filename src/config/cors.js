@@ -1,6 +1,6 @@
 const ALLOWED_ORIGINS = {
   production: [/^http:\/\/localhost:\d+$/],
-  development: [/^http:\/\/localhost:\d+$/],
+  development: [/^http:\/\/localhost:\d+$/, "https://bazaarna-zone.vercel.app"],
 };
 
 const logger = require("../utils/logger").child({ context: "CORS" });
