@@ -17,6 +17,17 @@ const createListing = {
       label: Joi.string(),
     }),
     condition: Joi.string().valid("new", "used", "refurbished"),
+    contactInfo: Joi.object().keys({
+      whatsapp: Joi.string().allow("", null),
+      phone: Joi.string().allow("", null),
+      telegram: Joi.string().allow("", null),
+      socialLinks: Joi.object().keys({
+        instagram: Joi.string().allow("", null),
+        tiktok: Joi.string().allow("", null),
+        facebook: Joi.string().allow("", null),
+      }),
+    }),
+    images: Joi.array().items(objectId),
     status: Joi.string().valid("draft", "active"),
   }),
 };
@@ -36,6 +47,17 @@ const updateListing = {
       label: Joi.string(),
     }),
     condition: Joi.string().valid("new", "used", "refurbished"),
+    contactInfo: Joi.object().keys({
+      whatsapp: Joi.string().allow("", null),
+      phone: Joi.string().allow("", null),
+      telegram: Joi.string().allow("", null),
+      socialLinks: Joi.object().keys({
+        instagram: Joi.string().allow("", null),
+        tiktok: Joi.string().allow("", null),
+        facebook: Joi.string().allow("", null),
+      }),
+    }),
+    images: Joi.array().items(objectId),
     status: Joi.string().valid("draft", "active", "sold"),
   }),
 };
