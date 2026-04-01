@@ -18,7 +18,7 @@ const initSocket = (server) => {
   io.use(async (socket, next) => {
     try {
       const token =
-        socket.handshake.auth.token || socket.handshake.headers.token;
+      socket.handshake.headers.cookie || socket.handshake.auth.token || socket.handshake.headers.token;
       if (!token) {
         return next(new Error("Authentication error: Token missing"));
       }
