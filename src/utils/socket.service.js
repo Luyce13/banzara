@@ -1,7 +1,8 @@
 const socketIo = require("socket.io");
-const tokenService = require("../modules/Tokens/service");
 const logger = require("./logger").child({ context: "Socket" });
 const corsConfig = require("../config/cors");
+const { ENV } = require("../constants");
+const jwt = require("jsonwebtoken");
 
 let io;
 const userSockets = new Map(); // userId -> Set(socketIds)
@@ -17,16 +18,22 @@ const initSocket = (server) => {
   // Authentication Middleware
   io.use(async (socket, next) => {
     try {
-      const token =
-      socket.handshake.headers.cookie || socket.handshake.auth.token || socket.handshake.headers.token;
+      let token;
+      if (socket.handshake.headers.cookie) {
+        const cookies = socket.handshake.headers.cookie.split('; ');
+        const authTokenCookie = cookies.find(c => c.startsWith('accessToken='));
+        if (authTokenCookie) {
+          token = authTokenCookie.split('=')[1];
+        }
+      }
       if (!token) {
         return next(new Error("Authentication error: Token missing"));
       }
-
-      const payload = await tokenService.verifyToken(token, "access");
-      socket.userId = payload.user;
+      const payload = jwt.verify(token, ENV.JWT_SECRET);
+      socket.userId = payload.sub;
       next();
     } catch (err) {
+      logger.error(`Authentication error: ${err}`);
       next(new Error("Authentication error: Invalid token"));
     }
   });
