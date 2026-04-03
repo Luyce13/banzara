@@ -46,27 +46,28 @@ async function handleCheckoutCompleted(session) {
   if (type === "subscription_upgrade") {
     const plans = require("../Subscriptions/service").PLANS;
     
-    // Only process new subscriptions from checkout (not from direct subscription updates)
     const existingSub = await Subscription.findOne({ user: userId });
-    if (!existingSub || !existingSub.stripeSubscriptionId) {
-      // This is a new subscription
-      await Subscription.findOneAndUpdate(
-        { user: userId },
-        {
-          plan: plan,
-          status: "active",
-          stripeSubscriptionId: session.subscription,
-          stripeCustomerId: session.customer,
-          featuredAdsQuota: plans[plan].featuredQuota,
-          boostsQuota: plans[plan].boostQuota,
-          currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        },
-        { upsert: true }
-      );
-      logger.info(`User ${userId} subscribed to ${plan} plan`);
+    const isPlanChange = existingSub && existingSub.plan !== plan;
+
+    // Update subscription (both new subscriptions and plan changes)
+    await Subscription.findOneAndUpdate(
+      { user: userId },
+      {
+        plan: plan,
+        status: "active",
+        stripeSubscriptionId: session.subscription,
+        stripeCustomerId: session.customer,
+        featuredAdsQuota: plans[plan].featuredQuota,
+        boostsQuota: plans[plan].boostQuota,
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      },
+      { upsert: true }
+    );
+
+    if (isPlanChange) {
+      logger.info(`User ${userId} changed plan from ${existingSub.plan} to ${plan}`);
     } else {
-      // Plan change was already handled by handlePlanChange in service.js
-      logger.info(`Subscription update for user ${userId} already processed`);
+      logger.info(`User ${userId} subscribed to ${plan} plan`);
     }
   } else if (type === "ad_boost") {
     const boostedUntil = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 day boost
