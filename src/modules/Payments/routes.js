@@ -22,4 +22,9 @@ router.post(
 router.post("/create-boost", auth, paymentController.createBoostCheckout);
 router.get("/create-portal", auth, paymentController.createCustomerPortal);
 
+// Admin-only Stripe price management
+router.get("/stripe-prices", auth, paymentController.getStripePriceConfig);
+router.post("/stripe-prices", auth, paymentController.createStripePrice);
+router.put("/stripe-prices/:plan", auth, paymentController.setStripePrice);
+
 module.exports = router;
