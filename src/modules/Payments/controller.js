@@ -11,7 +11,7 @@ const createSubscriptionCheckout = catchAsync(async (req, res) => {
 });
 
 const createBoostCheckout = catchAsync(async (req, res) => {
-  const { listingId } = req.query || req.body;
+  const { listingId } =  req.body;
   const result = await paymentService.createBoostCheckout(req.user.id, listingId);
   return ApiResponse(res, httpStatus.OK, "Ad boost checkout session created", result);
 });
