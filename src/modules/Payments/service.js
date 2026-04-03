@@ -14,15 +14,6 @@ const PLAN_HIERARCHY = {
   business: 2,
 };
 
-const getPlanPriceId = (plan) => {
-  // In production, these would be your actual Stripe Price IDs
-  const priceIds = {
-    verified: process.env.STRIPE_PRICE_VERIFIED || "price_verified_monthly",
-    business: process.env.STRIPE_PRICE_BUSINESS || "price_business_monthly",
-  };
-  return priceIds[plan];
-};
-
 /**
  * Create a Stripe Checkout Session for subscription or handle plan changes
  */
@@ -87,53 +78,17 @@ const createSubscriptionCheckout = async (userId, plan) => {
 
 /**
  * Handle plan changes for existing subscriptions
+ * Uses checkout session approach (supports inline price_data without needing Stripe Price IDs)
  */
 const handlePlanChange = async (userId, existingSubscription, newPlan, plans) => {
   const currentHierarchy = PLAN_HIERARCHY[existingSubscription.plan];
   const newHierarchy = PLAN_HIERARCHY[newPlan];
   const isUpgrade = newHierarchy > currentHierarchy;
 
-  const priceId = getPlanPriceId(newPlan);
-  if (!priceId) {
-    logger.warn(`Price ID not configured for ${newPlan}, falling back to new subscription`);
-    return createNewSubscriptionCheckout(userId, newPlan, plans);
-  }
-
-  try {
-    const updateConfig = {
-      items: [
-        {
-          id: existingSubscription.stripeSubscriptionId,
-          price: priceId,
-        },
-      ],
-      proration_behavior: isUpgrade ? "create_prorations" : "none",
-    };
-
-    const updatedSubscription = await stripe.subscriptions.update(
-      existingSubscription.stripeSubscriptionId,
-      updateConfig
-    );
-
-    await Subscription.findOneAndUpdate(
-      { user: userId },
-      {
-        plan: newPlan,
-        status: "active",
-        stripeSubscriptionId: updatedSubscription.id,
-        stripeCustomerId: updatedSubscription.customer,
-        featuredAdsQuota: plans[newPlan].featuredQuota,
-        boostsQuota: plans[newPlan].boostQuota,
-        currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000),
-      }
-    );
-
-    logger.info(`User ${userId} changed plan from ${existingSubscription.plan} to ${newPlan}`);
-    return { upgraded: true, message: `Successfully changed to ${newPlan} plan` };
-  } catch (error) {
-    logger.error(`Failed to update subscription: ${error.message}`);
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to update subscription. Please try again.");
-  }
+  logger.info(`Initiating plan change for user ${userId} from ${existingSubscription.plan} to ${newPlan} (${isUpgrade ? "upgrade" : "downgrade"})`);
+  
+  // Use checkout session for plan changes (supports inline price_data)
+  return createNewSubscriptionCheckout(userId, newPlan, plans);
 };
 
 /**
