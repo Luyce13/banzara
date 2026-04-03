@@ -195,7 +195,7 @@ const handlePlanChange = async (userId, existingSubscription, newPlan, plans) =>
       },
     ],
   });
-
+  console.log("Stripe subscription update result:", updated);
   // Persist data to DB
   await Subscription.findOneAndUpdate(
     { user: userId },
@@ -206,7 +206,7 @@ const handlePlanChange = async (userId, existingSubscription, newPlan, plans) =>
       stripeCustomerId: updated.customer,
       featuredAdsQuota: plans[newPlan].featuredQuota,
       boostsQuota: plans[newPlan].boostQuota,
-      currentPeriodEnd: new Date(updated.current_period_end * 1000),
+      currentPeriodEnd: updated.current_period_end ? new Date(updated.current_period_end * 1000) : null,
     },
     { upsert: true }
   );
