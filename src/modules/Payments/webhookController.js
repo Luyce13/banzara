@@ -41,32 +41,75 @@ const handleWebhook = async (req, res) => {
 };
 
 async function handleCheckoutCompleted(session) {
-  const { userId, plan, listingId, type } = session.metadata;
+  const { userId, plan, listingId, type, previousPlan, stripeSubscriptionId } = session.metadata;
+  const plans = require("../Subscriptions/service").PLANS;
 
-  if (type === "subscription_upgrade") {
-    const plans = require("../Subscriptions/service").PLANS;
-    
-    const existingSub = await Subscription.findOne({ user: userId });
-    const isPlanChange = existingSub && existingSub.plan !== plan;
+  if (type === "subscription_upgrade" || type === "plan_upgrade") {
+    if (type === "plan_upgrade") {
+      // UPGRADE: Update existing subscription with new price
+      try {
+        const stripeSubscription = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+        const subscriptionItem = stripeSubscription.items.data[0];
+        if (!subscriptionItem) {
+          throw new Error("Subscription item not found for upgrade");
+        }
 
-    // Update subscription (both new subscriptions and plan changes)
-    await Subscription.findOneAndUpdate(
-      { user: userId },
-      {
-        plan: plan,
-        status: "active",
-        stripeSubscriptionId: session.subscription,
-        stripeCustomerId: session.customer,
-        featuredAdsQuota: plans[plan].featuredQuota,
-        boostsQuota: plans[plan].boostQuota,
-        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      },
-      { upsert: true }
-    );
+        // Import service to get getStripePriceIdForPlan
+        const paymentService = require("./service");
+        const newPriceId = await paymentService.getStripePriceIdForPlan(plan);
 
-    if (isPlanChange) {
-      logger.info(`User ${userId} changed plan from ${existingSub.plan} to ${plan}`);
+        // Update Stripe subscription with prorations
+        const updated = await stripe.subscriptions.update(stripeSubscriptionId, {
+          proration_behavior: "create_prorations",
+          items: [
+            {
+              id: subscriptionItem.id,
+              price: newPriceId,
+            },
+          ],
+        });
+
+        // Calculate period end
+        let periodEnd = null;
+        if (updated.current_period_end) {
+          periodEnd = new Date(updated.current_period_end * 1000);
+        } else if (updated.billing_cycle_anchor) {
+          periodEnd = new Date((updated.billing_cycle_anchor + 30 * 24 * 60 * 60) * 1000);
+        }
+
+        // Update DB
+        await Subscription.findOneAndUpdate(
+          { user: userId },
+          {
+            plan: plan,
+            status: updated.status,
+            featuredAdsQuota: plans[plan].featuredQuota,
+            boostsQuota: plans[plan].boostQuota,
+            currentPeriodEnd: periodEnd,
+          }
+        );
+
+        logger.info(`User ${userId} upgraded from ${previousPlan} to ${plan}`);
+      } catch (err) {
+        logger.error(`Failed to process plan upgrade for user ${userId}: ${err.message}`);
+        throw err;
+      }
     } else {
+      // NEW SUBSCRIPTION
+      await Subscription.findOneAndUpdate(
+        { user: userId },
+        {
+          plan: plan,
+          status: "active",
+          stripeSubscriptionId: session.subscription,
+          stripeCustomerId: session.customer,
+          featuredAdsQuota: plans[plan].featuredQuota,
+          boostsQuota: plans[plan].boostQuota,
+          currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        },
+        { upsert: true }
+      );
+
       logger.info(`User ${userId} subscribed to ${plan} plan`);
     }
   } else if (type === "ad_boost") {

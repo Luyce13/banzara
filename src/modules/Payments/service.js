@@ -128,8 +128,48 @@ const createSubscriptionCheckout = async (userId, plan) => {
 
   // Handle plan changes for existing paid subscriptions
   if (existingSubscription && existingSubscription.stripeSubscriptionId && existingSubscription.plan !== "free") {
-    const updateResult = await handlePlanChange(userId, existingSubscription, plan, plans);
-    return updateResult;
+    const currentHierarchy = PLAN_HIERARCHY[existingSubscription.plan];
+    const newHierarchy = PLAN_HIERARCHY[plan];
+    const isUpgrade = newHierarchy > currentHierarchy;
+
+    if (isUpgrade) {
+      // UPGRADE: Require checkout confirmation before charging
+      const planPriceId = await getStripePriceIdForPlan(plan);
+      if (!planPriceId) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Unable to resolve Stripe price for plan");
+      }
+
+      const sessionConfig = {
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price: planPriceId,
+            quantity: 1,
+          },
+        ],
+        mode: "subscription",
+        success_url: `${ENV.CLIENT_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${ENV.CLIENT_URL}/payment-cancel`,
+        metadata: {
+          userId: String(userId),
+          plan: plan,
+          type: "plan_upgrade",
+          previousPlan: existingSubscription.plan,
+          stripeSubscriptionId: existingSubscription.stripeSubscriptionId,
+        },
+      };
+
+      if (existingSubscription.stripeCustomerId) {
+        sessionConfig.customer = existingSubscription.stripeCustomerId;
+      }
+
+      const session = await stripe.checkout.sessions.create(sessionConfig);
+      return { url: session.url, isUpgrade: true };
+    } else {
+      // DOWNGRADE: Direct API update (no payment required)
+      const updateResult = await handlePlanChange(userId, existingSubscription, plan, plans);
+      return { ...updateResult, isUpgrade: false };
+    }
   }
 
   // New subscription flow
