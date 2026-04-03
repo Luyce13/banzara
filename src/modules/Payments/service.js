@@ -94,7 +94,7 @@ const handlePlanChange = async (userId, existingSubscription, newPlan, plans) =>
   const isUpgrade = newHierarchy > currentHierarchy;
 
   const priceId = getPlanPriceId(newPlan);
-  if (!priceId || priceId.startsWith("price_")) {
+  if (!priceId) {
     logger.warn(`Price ID not configured for ${newPlan}, falling back to new subscription`);
     return createNewSubscriptionCheckout(userId, newPlan, plans);
   }
