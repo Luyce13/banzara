@@ -4,8 +4,15 @@ const Listing = require("../Listings/model");
 const ApiError = require("../../utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
-const { API_CONFIG, ENV } = require("../../constants");
+const { ENV } = require("../../constants");
 const logger = require("../../utils/logger").child({ context: "Payments" });
+
+// Plan hierarchy for upgrade/downgrade detection
+const PLAN_HIERARCHY = {
+  free: 0,
+  verified: 1,
+  business: 2,
+};
 
 const getConfiguredPriceId = (plan) => {
   if (plan === "verified") {
@@ -15,24 +22,6 @@ const getConfiguredPriceId = (plan) => {
     return process.env.STRIPE_PRICE_BUSINESS || null;
   }
   return null;
-};
-
-const setConfiguredPriceId = (plan, priceId) => {
-  if (plan === "verified") {
-    process.env.STRIPE_PRICE_VERIFIED = priceId;
-  } else if (plan === "business") {
-    process.env.STRIPE_PRICE_BUSINESS = priceId;
-  } else {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid plan for Stripe price config");
-  }
-  return priceId;
-};
-
-// Plan hierarchy for upgrade/downgrade detection
-const PLAN_HIERARCHY = {
-  free: 0,
-  verified: 1,
-  business: 2,
 };
 
 const getStripePriceIdForPlan = async (plan) => {
@@ -56,8 +45,6 @@ const getStripePriceIdForPlan = async (plan) => {
     product: product.id,
     metadata: { plan },
   });
-
-  setConfiguredPriceId(plan, price.id);
   return price.id;
 };
 
@@ -92,8 +79,6 @@ const createStripePriceForPlan = async (plan, rate) => {
     product: product.id,
     metadata: { plan },
   });
-
-  setConfiguredPriceId(plan, price.id);
   return price.id;
 };
 
@@ -102,7 +87,6 @@ const setStripePriceId = (plan, priceId) => {
   if (!plans[plan] || plan === "free") {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid plan for Stripe price config");
   }
-  setConfiguredPriceId(plan, priceId);
   return priceId;
 };
 
@@ -173,11 +157,12 @@ const createSubscriptionCheckout = async (userId, plan) => {
   }
 
   // New subscription flow
+  console.log("Creating new subscription checkout for user", userId, "plan", plan);
   const planPriceId = await getStripePriceIdForPlan(plan);
   if (!planPriceId) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Unable to resolve Stripe price for plan");
   }
-
+  console.log("Resolved Stripe price ID for plan", plan, ":", planPriceId);
   const sessionConfig = {
     payment_method_types: ["card"],
     line_items: [
