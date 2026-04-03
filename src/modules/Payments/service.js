@@ -227,7 +227,7 @@ const handlePlanChange = async (userId, existingSubscription, newPlan, plans) =>
 
   // Update Stripe subscription with new plan
   const updated = await stripe.subscriptions.update(existingSubscription.stripeSubscriptionId, {
-    proration_behavior: isUpgrade ? "create_prorations" : "none",
+    proration_behavior: isUpgrade ? "create_prorations" : "create_prorations",
     items: [
       {
         id: subscriptionItem.id,
