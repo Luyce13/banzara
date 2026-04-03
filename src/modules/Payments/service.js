@@ -385,4 +385,5 @@ module.exports = {
   getStripePriceConfig,
   createStripePriceForPlan,
   setStripePriceId,
+  getStripePriceIdForPlan,
 };
