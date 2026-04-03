@@ -45,6 +45,20 @@ async function handleCheckoutCompleted(session) {
 
   if (type === "subscription_upgrade") {
     const plans = require("../Subscriptions/service").PLANS;
+    
+    // Get existing subscription to cancel old one if upgrading
+    const existingSub = await Subscription.findOne({ user: userId });
+    if (existingSub && existingSub.stripeSubscriptionId && existingSub.stripeSubscriptionId !== session.subscription) {
+      try {
+        await stripe.subscriptions.update(existingSub.stripeSubscriptionId, {
+          cancel_at_period_end: true, // Cancel at the end of the current period
+        });
+        logger.info(`Cancelled old subscription ${existingSub.stripeSubscriptionId} for user ${userId}`);
+      } catch (error) {
+        logger.error(`Failed to cancel old subscription: ${error.message}`);
+      }
+    }
+
     await Subscription.findOneAndUpdate(
       { user: userId },
       {

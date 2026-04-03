@@ -15,7 +15,15 @@ const createSubscriptionCheckout = async (userId, plan) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid plan selected");
   }
 
-  const session = await stripe.checkout.sessions.create({
+  // Get existing subscription to reuse customer if possible
+  const existingSubscription = await Subscription.findOne({ user: userId });
+
+  // Prevent subscribing to the same plan if already active
+  if (existingSubscription && existingSubscription.plan === plan && existingSubscription.status === "active") {
+    throw new ApiError(httpStatus.BAD_REQUEST, `You are already subscribed to the ${plan} plan`);
+  }
+
+  const sessionConfig = {
     payment_method_types: ["card"],
     line_items: [
       {
@@ -41,7 +49,14 @@ const createSubscriptionCheckout = async (userId, plan) => {
       plan: plan,
       type: "subscription_upgrade",
     },
-  });
+  };
+
+  // Reuse existing Stripe customer if available
+  if (existingSubscription && existingSubscription.stripeCustomerId) {
+    sessionConfig.customer = existingSubscription.stripeCustomerId;
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionConfig);
 
   return { url: session.url };
 };
