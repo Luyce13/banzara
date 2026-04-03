@@ -59,6 +59,17 @@ const createBoostCheckout = async (userId, listingId) => {
     throw new ApiError(httpStatus.FORBIDDEN, "You do not own this listing");
   }
 
+  // Check if listing is already boosted
+  if (listing.boostedUntil && listing.boostedUntil > new Date()) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "This listing is already boosted");
+  }
+
+  // Check boost quota
+  const subscription = await Subscription.findOne({ user: userId });
+  if (!subscription || subscription.boostsQuota <= 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "No boost credits remaining. Please upgrade your plan.");
+  }
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: [

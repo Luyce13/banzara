@@ -64,6 +64,11 @@ async function handleCheckoutCompleted(session) {
     await Listing.findByIdAndUpdate(listingId, {
       boostedUntil: boostedUntil,
     });
+    // Decrement boost quota
+    await Subscription.findOneAndUpdate(
+      { user: userId },
+      { $inc: { boostsQuota: -1 } }
+    );
     logger.info(`Listing ${listingId} boosted until ${boostedUntil}`);
   }
 }
