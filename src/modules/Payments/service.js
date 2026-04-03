@@ -5,9 +5,26 @@ const ApiError = require("../../utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
 const { API_CONFIG, ENV } = require("../../constants");
+const logger = require("../../utils/logger").child({ context: "Payments" });
+
+// Plan hierarchy for upgrade/downgrade detection
+const PLAN_HIERARCHY = {
+  free: 0,
+  verified: 1,
+  business: 2,
+};
+
+const getPlanPriceId = (plan) => {
+  // In production, these would be your actual Stripe Price IDs
+  const priceIds = {
+    verified: process.env.STRIPE_PRICE_VERIFIED || "price_verified_monthly",
+    business: process.env.STRIPE_PRICE_BUSINESS || "price_business_monthly",
+  };
+  return priceIds[plan];
+};
 
 /**
- * Create a Stripe Checkout Session for subscription upgrade
+ * Create a Stripe Checkout Session for subscription or handle plan changes
  */
 const createSubscriptionCheckout = async (userId, plan) => {
   const plans = require("../Subscriptions/service").PLANS;
@@ -15,7 +32,10 @@ const createSubscriptionCheckout = async (userId, plan) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid plan selected");
   }
 
-  // Get existing subscription to reuse customer if possible
+  if (plan === "free") {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Cannot subscribe to free plan. Use the portal to downgrade.");
+  }
+
   const existingSubscription = await Subscription.findOne({ user: userId });
 
   // Prevent subscribing to the same plan if already active
@@ -23,12 +43,18 @@ const createSubscriptionCheckout = async (userId, plan) => {
     throw new ApiError(httpStatus.BAD_REQUEST, `You are already subscribed to the ${plan} plan`);
   }
 
+  // Handle plan changes for existing paid subscriptions
+  if (existingSubscription && existingSubscription.stripeSubscriptionId && existingSubscription.plan !== "free") {
+    return handlePlanChange(userId, existingSubscription, plan, plans);
+  }
+
+  // New subscription flow
   const sessionConfig = {
     payment_method_types: ["card"],
     line_items: [
       {
         price_data: {
-          currency: "usd", // default currency
+          currency: "usd",
           product_data: {
             name: `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
             description: `BanzaarnaZone ${plan} subscription`,
@@ -51,13 +77,104 @@ const createSubscriptionCheckout = async (userId, plan) => {
     },
   };
 
-  // Reuse existing Stripe customer if available
   if (existingSubscription && existingSubscription.stripeCustomerId) {
     sessionConfig.customer = existingSubscription.stripeCustomerId;
   }
 
   const session = await stripe.checkout.sessions.create(sessionConfig);
+  return { url: session.url };
+};
 
+/**
+ * Handle plan changes for existing subscriptions
+ */
+const handlePlanChange = async (userId, existingSubscription, newPlan, plans) => {
+  const currentHierarchy = PLAN_HIERARCHY[existingSubscription.plan];
+  const newHierarchy = PLAN_HIERARCHY[newPlan];
+  const isUpgrade = newHierarchy > currentHierarchy;
+
+  const priceId = getPlanPriceId(newPlan);
+  if (!priceId || priceId.startsWith("price_")) {
+    logger.warn(`Price ID not configured for ${newPlan}, falling back to new subscription`);
+    return createNewSubscriptionCheckout(userId, newPlan, plans);
+  }
+
+  try {
+    const updateConfig = {
+      items: [
+        {
+          id: existingSubscription.stripeSubscriptionId,
+          price: priceId,
+        },
+      ],
+      proration_behavior: isUpgrade ? "create_prorations" : "none",
+    };
+
+    const updatedSubscription = await stripe.subscriptions.update(
+      existingSubscription.stripeSubscriptionId,
+      updateConfig
+    );
+
+    await Subscription.findOneAndUpdate(
+      { user: userId },
+      {
+        plan: newPlan,
+        status: "active",
+        stripeSubscriptionId: updatedSubscription.id,
+        stripeCustomerId: updatedSubscription.customer,
+        featuredAdsQuota: plans[newPlan].featuredQuota,
+        boostsQuota: plans[newPlan].boostQuota,
+        currentPeriodEnd: new Date(updatedSubscription.current_period_end * 1000),
+      }
+    );
+
+    logger.info(`User ${userId} changed plan from ${existingSubscription.plan} to ${newPlan}`);
+    return { upgraded: true, message: `Successfully changed to ${newPlan} plan` };
+  } catch (error) {
+    logger.error(`Failed to update subscription: ${error.message}`);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to update subscription. Please try again.");
+  }
+};
+
+/**
+ * Create new subscription checkout (fallback)
+ */
+const createNewSubscriptionCheckout = async (userId, plan, plans) => {
+  const existingSubscription = await Subscription.findOne({ user: userId });
+
+  const sessionConfig = {
+    payment_method_types: ["card"],
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: `${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
+            description: `BanzaarnaZone ${plan} subscription`,
+          },
+          unit_amount: plan === "verified" ? 10000 : 25000,
+          recurring: {
+            interval: "month",
+          },
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "subscription",
+    success_url: `${ENV.CLIENT_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${ENV.CLIENT_URL}/payment-cancel`,
+    metadata: {
+      userId: String(userId),
+      plan: plan,
+      type: "subscription_upgrade",
+    },
+  };
+
+  if (existingSubscription && existingSubscription.stripeCustomerId) {
+    sessionConfig.customer = existingSubscription.stripeCustomerId;
+  }
+
+  const session = await stripe.checkout.sessions.create(sessionConfig);
   return { url: session.url };
 };
 

@@ -46,33 +46,28 @@ async function handleCheckoutCompleted(session) {
   if (type === "subscription_upgrade") {
     const plans = require("../Subscriptions/service").PLANS;
     
-    // Get existing subscription to cancel old one if upgrading
+    // Only process new subscriptions from checkout (not from direct subscription updates)
     const existingSub = await Subscription.findOne({ user: userId });
-    if (existingSub && existingSub.stripeSubscriptionId && existingSub.stripeSubscriptionId !== session.subscription) {
-      try {
-        await stripe.subscriptions.update(existingSub.stripeSubscriptionId, {
-          cancel_at_period_end: true, // Cancel at the end of the current period
-        });
-        logger.info(`Cancelled old subscription ${existingSub.stripeSubscriptionId} for user ${userId}`);
-      } catch (error) {
-        logger.error(`Failed to cancel old subscription: ${error.message}`);
-      }
+    if (!existingSub || !existingSub.stripeSubscriptionId) {
+      // This is a new subscription
+      await Subscription.findOneAndUpdate(
+        { user: userId },
+        {
+          plan: plan,
+          status: "active",
+          stripeSubscriptionId: session.subscription,
+          stripeCustomerId: session.customer,
+          featuredAdsQuota: plans[plan].featuredQuota,
+          boostsQuota: plans[plan].boostQuota,
+          currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        },
+        { upsert: true }
+      );
+      logger.info(`User ${userId} subscribed to ${plan} plan`);
+    } else {
+      // Plan change was already handled by handlePlanChange in service.js
+      logger.info(`Subscription update for user ${userId} already processed`);
     }
-
-    await Subscription.findOneAndUpdate(
-      { user: userId },
-      {
-        plan: plan,
-        status: "active",
-        stripeSubscriptionId: session.subscription,
-        stripeCustomerId: session.customer,
-        featuredAdsQuota: plans[plan].featuredQuota,
-        boostsQuota: plans[plan].boostQuota,
-        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Approx 30 days
-      },
-      { upsert: true }
-    );
-    logger.info(`User ${userId} upgraded to ${plan} plan`);
   } else if (type === "ad_boost") {
     const boostedUntil = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 day boost
     await Listing.findByIdAndUpdate(listingId, {
