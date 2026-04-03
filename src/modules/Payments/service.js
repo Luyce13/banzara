@@ -195,8 +195,17 @@ const handlePlanChange = async (userId, existingSubscription, newPlan, plans) =>
       },
     ],
   });
-  console.log("Stripe subscription update result:", updated);
+
   // Persist data to DB
+  // Use current_period_end if available; fallback to billing_cycle_anchor + 30 days
+  let periodEnd = null;
+  if (updated.current_period_end) {
+    periodEnd = new Date(updated.current_period_end * 1000);
+  } else if (updated.billing_cycle_anchor) {
+    // Fallback: add 30 days to billing cycle anchor (for monthly plans)
+    periodEnd = new Date((updated.billing_cycle_anchor + 30 * 24 * 60 * 60) * 1000);
+  }
+
   await Subscription.findOneAndUpdate(
     { user: userId },
     {
@@ -206,7 +215,7 @@ const handlePlanChange = async (userId, existingSubscription, newPlan, plans) =>
       stripeCustomerId: updated.customer,
       featuredAdsQuota: plans[newPlan].featuredQuota,
       boostsQuota: plans[newPlan].boostQuota,
-      currentPeriodEnd: updated.current_period_end ? new Date(updated.current_period_end * 1000) : null,
+      currentPeriodEnd: periodEnd,
     },
     { upsert: true }
   );
