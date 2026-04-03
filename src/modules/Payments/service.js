@@ -14,6 +14,24 @@ const PLAN_HIERARCHY = {
   business: 2,
 };
 
+const PLAN_CHANGE_COOLDOWN_HOURS = Number(process.env.PLAN_CHANGE_COOLDOWN_HOURS || 24);
+
+const enforcePlanChangeCooldown = (existingSubscription) => {
+  if (!existingSubscription || !existingSubscription.updatedAt) return;
+
+  const now = new Date();
+  const lastChange = new Date(existingSubscription.updatedAt);
+  const cooldownMs = PLAN_CHANGE_COOLDOWN_HOURS * 60 * 60 * 1000;
+
+  if (now - lastChange < cooldownMs) {
+    const remainingMinutes = Math.ceil((cooldownMs - (now - lastChange)) / (60 * 1000));
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      `Plan changes are allowed only once every ${PLAN_CHANGE_COOLDOWN_HOURS} hours. Please wait ${remainingMinutes} more minutes before changing your plan again.`
+    );
+  }
+};
+
 const getConfiguredPriceId = (plan) => {
   if (plan === "verified") {
     return process.env.STRIPE_PRICE_VERIFIED || null;
@@ -108,6 +126,10 @@ const createSubscriptionCheckout = async (userId, plan) => {
   // Prevent subscribing to the same plan if already active
   if (existingSubscription && existingSubscription.plan === plan && existingSubscription.status === "active") {
     throw new ApiError(httpStatus.BAD_REQUEST, `You are already subscribed to the ${plan} plan`);
+  }
+
+  if (existingSubscription && existingSubscription.stripeSubscriptionId && existingSubscription.plan !== "free") {
+    // enforcePlanChangeCooldown(existingSubscription);
   }
 
   // Handle plan changes for existing paid subscriptions
