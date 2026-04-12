@@ -1,9 +1,7 @@
 const Listing = require("../modules/Listings/model");
 const logger = require("./logger").child({ context: "EXP-Job" });
 
-/**
- * Run marketplace hygiene tasks (expire listings and clear old boosts)
- */
+// Run marketplace hygiene tasks (expire listings and clear old boosts)
 const runMarketplaceCleanups = async () => {
   try {
     const now = new Date();
@@ -43,9 +41,7 @@ const runMarketplaceCleanups = async () => {
   }
 };
 
-/**
- * Initialize all lifecycle background jobs
- */
+// Initialize all lifecycle background jobs
 const initLifecycleJobs = () => {
   // Run every hour
   const ONE_HOUR = 60 * 60 * 1000;

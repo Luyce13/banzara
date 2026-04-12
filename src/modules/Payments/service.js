@@ -108,9 +108,7 @@ const setStripePriceId = (plan, priceId) => {
   return priceId;
 };
 
-/**
- * Create a Stripe Checkout Session for subscription or handle plan changes
- */
+// Create a Stripe Checkout Session for subscription or handle plan changes
 const createSubscriptionCheckout = async (userId, plan) => {
   const plans = require("../Subscriptions/service").PLANS;
   if (!plans[plan]) {
@@ -182,10 +180,8 @@ const createSubscriptionCheckout = async (userId, plan) => {
   return { url: session.url };
 };
 
-/**
- * Handle plan changes for existing subscriptions
- * Uses checkout session approach (supports inline price_data without needing Stripe Price IDs)
- */
+// Handle plan changes for existing subscriptions
+// Uses checkout session approach (supports inline price_data without needing Stripe Price IDs)
 const handlePlanChange = async (userId, existingSubscription, newPlan, plans) => {
   const currentHierarchy = PLAN_HIERARCHY[existingSubscription.plan];
   const newHierarchy = PLAN_HIERARCHY[newPlan];
@@ -247,9 +243,7 @@ const handlePlanChange = async (userId, existingSubscription, newPlan, plans) =>
   };
 };
 
-/**
- * Create new subscription checkout (fallback)
- */
+// Create new subscription checkout (fallback)
 const createNewSubscriptionCheckout = async (userId, plan, plans) => {
   const existingSubscription = await Subscription.findOne({ user: userId });
 
@@ -284,9 +278,7 @@ const createNewSubscriptionCheckout = async (userId, plan, plans) => {
   return { url: session.url };
 };
 
-/**
- * Create a Stripe Checkout Session for a single ad boost
- */
+// Create a Stripe Checkout Session for a single ad boost
 const createBoostCheckout = async (userId, listingId) => {
   const listing = await Listing.findById(listingId);
   if (!listing) {
@@ -336,9 +328,7 @@ const createBoostCheckout = async (userId, listingId) => {
   return { url: session.url };
 };
 
-/**
- * Create a Stripe Customer Portal session
- */
+// Create a Stripe Customer Portal session
 const createCustomerPortal = async (userId) => {
   const subscription = await Subscription.findOne({ user: userId });
   if (!subscription || !subscription.stripeCustomerId) {

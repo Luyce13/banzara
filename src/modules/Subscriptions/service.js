@@ -26,12 +26,10 @@ const PLANS = {
   },
 };
 
-/**
- * Get user's current subscription or create default 'free' one
- */
+// Get user's current subscription or create default 'free' one
 const getOrCreateSubscription = async (userId) => {
   let subscription = await Subscription.findOne({ user: userId });
-  
+
   if (!subscription) {
     subscription = await Subscription.create({
       user: userId,
@@ -40,39 +38,35 @@ const getOrCreateSubscription = async (userId) => {
       featuredAdsQuota: PLANS.free.featuredQuota,
       boostsQuota: PLANS.free.boostQuota,
     });
-    
+
     await User.findByIdAndUpdate(userId, { subscription: subscription._id });
   }
-  
+
   return subscription;
 };
 
-/**
- * Check if user can post a new ad based on their plan
- */
+// Check if user can post a new ad based on their plan
 const checkListingQuota = async (userId) => {
   const subscription = await getOrCreateSubscription(userId);
   const planDetails = PLANS[subscription.plan];
-  
-  const activeListingsCount = await require("../Listings/model").countDocuments({ 
-    seller: userId, 
+
+  const activeListingsCount = await require("../Listings/model").countDocuments({
+    seller: userId,
     status: { $in: ["active", "featured", "draft"] },
-    isDeleted: false 
+    isDeleted: false
   });
-  
+
   if (activeListingsCount >= planDetails.listingLimit) {
     throw new ApiError(
-      httpStatus.FORBIDDEN, 
+      httpStatus.FORBIDDEN,
       `Listing limit reached for your ${planDetails.name} plan (${planDetails.listingLimit} ads). Please upgrade your plan.`
     );
   }
-  
+
   return true;
 };
 
-/**
- * Revert user to free plan (triggered by cancellation or payment failure)
- */
+// Revert user to free plan (triggered by cancellation or payment failure)
 const revertToFreePlan = async (userId) => {
   await Subscription.findOneAndUpdate(
     { user: userId },

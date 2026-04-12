@@ -1,9 +1,7 @@
 const xss = require("xss");
 
-/**
- * Recursively removes keys starting with $ or containing . (NoSQL injection)
- * Operates in-place to avoid Express 5 read-only property errors.
- */
+
+// Recursively removes keys starting with $ or containing . (NoSQL injection)
 function sanitizeMongo(obj) {
   if (!obj || typeof obj !== "object") return;
 
@@ -16,10 +14,7 @@ function sanitizeMongo(obj) {
   }
 }
 
-/**
- * Recursively escapes string values to prevent XSS.
- * Operates in-place to avoid Express 5 read-only property errors.
- */
+// Recursively escapes string values to prevent XSS.
 function sanitizeXss(obj) {
   if (!obj || typeof obj !== "object") return;
 

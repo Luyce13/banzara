@@ -7,9 +7,7 @@ const jwt = require("jsonwebtoken");
 let io;
 const userSockets = new Map(); // userId -> Set(socketIds)
 
-/**
- * Initialize Socket.io
- */
+// Initialize Socket.io
 const initSocket = (server) => {
   io = socketIo(server, {
     cors: corsConfig,
@@ -83,9 +81,7 @@ const initSocket = (server) => {
   return io;
 };
 
-/**
- * Get Socket.io instance
- */
+// Get Socket.io instance
 const getIO = () => {
   if (!io) {
     throw new Error("Socket.io not initialized!");
@@ -93,18 +89,14 @@ const getIO = () => {
   return io;
 };
 
-/**
- * Emit event to a specific conversation
- */
+// Emit event to a specific conversation
 const emitToConversation = (conversationId, event, data) => {
   if (io) {
     io.to(`conversation:${conversationId}`).emit(event, data);
   }
 };
 
-/**
- * Emit event to a specific user
- */
+// Emit event to a specific user
 const emitToUser = (userId, event, data) => {
   if (io) {
     io.to(`user:${userId}`).emit(event, data);

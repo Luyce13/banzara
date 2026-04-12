@@ -6,9 +6,7 @@ const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
 const socketService = require("../../utils/socket.service");
 
-/**
- * Get or create a conversation for a listing
- */
+// Get or create a conversation for a listing
 const getOrCreateConversation = async (listingId, userId) => {
   const listing = await Listing.findById(listingId);
   if (!listing) {
@@ -45,9 +43,7 @@ const getOrCreateConversation = async (listingId, userId) => {
   ]);
 };
 
-/**
- * Get all conversations for a user
- */
+// Get all conversations for a user
 const getMyConversations = async (userId) => {
   const conversations = await Conversation.find({
     participants: userId,
@@ -62,9 +58,7 @@ const getMyConversations = async (userId) => {
   return conversations;
 };
 
-/**
- * Send a message
- */
+// Send a message
 const sendMessage = async (conversationId, body, userId) => {
   const conversation = await Conversation.findById(conversationId);
   if (!conversation) {
@@ -87,16 +81,14 @@ const sendMessage = async (conversationId, body, userId) => {
   await conversation.save();
 
   const populatedMessage = await message.populate("sender", "name avatar");
-  
+
   // Real-time emission
   socketService.emitToConversation(conversationId, "new_message", populatedMessage);
-  
+
   return populatedMessage;
 };
 
-/**
- * Get messages for a conversation
- */
+// Get messages for a conversation
 const getMessages = async (conversationId, userId, options) => {
   const conversation = await Conversation.findById(conversationId);
   if (!conversation) {
@@ -123,9 +115,7 @@ const getMessages = async (conversationId, userId, options) => {
   };
 };
 
-/**
- * Mark all messages in a conversation as read
- */
+// Mark all messages in a conversation as read
 const markAsRead = async (conversationId, userId) => {
   await Message.updateMany(
     { conversation: conversationId, readBy: { $ne: userId } },

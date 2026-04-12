@@ -3,9 +3,7 @@ const ApiError = require("../../utils/ApiError");
 const httpStatusObj = require("http-status");
 const httpStatus = httpStatusObj.status || httpStatusObj;
 
-/**
- * Get active banners for a specific position
- */
+// Get active banners for a specific position
 const getBannersByPosition = async (position) => {
   return Banner.find({
     position,
@@ -14,9 +12,7 @@ const getBannersByPosition = async (position) => {
   }).sort({ order: 1, createdAt: -1 });
 };
 
-/**
- * Create a new banner
- */
+// Create a new banner
 const createBanner = async (bannerBody) => {
   if (bannerBody.durationDays) {
     bannerBody.expiresAt = new Date(
@@ -26,15 +22,13 @@ const createBanner = async (bannerBody) => {
   return Banner.create(bannerBody);
 };
 
-/**
- * Update a banner
- */
+// Update a banner
 const updateBanner = async (bannerId, updateBody) => {
   const banner = await Banner.findById(bannerId);
   if (!banner) {
     throw new ApiError(httpStatus.NOT_FOUND, "Banner not found");
   }
-  
+
   if (updateBody.durationDays) {
     updateBody.expiresAt = new Date(
       Date.now() + updateBody.durationDays * 24 * 60 * 60 * 1000
@@ -46,9 +40,7 @@ const updateBanner = async (bannerId, updateBody) => {
   return banner;
 };
 
-/**
- * Delete a banner
- */
+// Delete a banner
 const deleteBanner = async (bannerId) => {
   const result = await Banner.findByIdAndDelete(bannerId);
   if (!result) {
